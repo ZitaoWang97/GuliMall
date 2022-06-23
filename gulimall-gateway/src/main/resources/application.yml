@@ -1,0 +1,70 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        # 测试
+        - id: g_route
+          uri: https://www.google.com
+          # 断言
+          predicates:
+            - Query=url,google
+
+        - id: product_route
+          uri: lb://gulimall-product
+          predicates:
+            - Path=/api/product/**
+            # 重写路径
+            # 当前请求路径: http://localhost:88/api/product/category/list/tree
+            # 经过负载均衡: http://localhost:10000/api/product/category/list/tree
+            # 希望转换为路径: http://localhost:10000/product/category/list/tree
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: member_route
+          uri: lb://gulimall-member
+          predicates:
+            - Path=/api/member/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: coupon_route
+          uri: lb://gulimall-coupon
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+
+        - id: ware_route
+          uri: lb://gulimall-ware
+          predicates:
+            - Path=/api/ware/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: third_party_route
+          uri: lb://gulimall-third-party
+          predicates:
+            - Path=/api/thirdparty/**
+            # 重写路径
+            # 当前请求路径: http://localhost:88/api/thirdparty/oss/policy
+            # 经过负载均衡: http://localhost:30000/api/thirdparty/oss/policy
+            # 希望转换为路径: http://localhost:30000/oss/policy
+          filters:
+            - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
+
+        - id: admin_route
+          # lb代表负载均衡
+          uri: lb://renren-fast
+          # 默认前端项目路径上都先以api开头
+          predicates:
+            - Path=/api/**
+          # 重写路径
+          # 当前请求路径: http://localhost:88/api/captcha.jpg?uuid=...
+          # 经过负载均衡: http://localhost:8080/api/captcha.jpg?uuid=...
+          # 希望转换为路径: http://localhost:8080/renren-fast/captcha.jpg?uuid=...
+          filters:
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+
+
+

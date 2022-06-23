@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.56.10:3306/gulimall_pms
+    username: root
+    password: root
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    alicloud:
+      access-key: LTAI5tEmjWJmidi9c3YTseRf
+      secret-key: ZmoZ8IDnA4ObqWkwfk7QIR0ewaAQMs
+      oss:
+        endpoint: oss-eu-central-1.aliyuncs.com
+  application:
+    name: gulimall-product
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml  # 只扫描自己类下的mapper
+  global-config:
+    db-config:
+      id-type: auto # 自增主键
+      # 配置全局的逻辑删除规则（可省略）
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+server:
+  port: 10000
+
+logging:
+  level:
+    com.zitao.gulimall: debug
+
