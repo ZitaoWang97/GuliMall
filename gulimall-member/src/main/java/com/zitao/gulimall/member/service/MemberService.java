@@ -3,6 +3,8 @@ package com.zitao.gulimall.member.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zitao.common.utils.PageUtils;
 import com.zitao.gulimall.member.entity.MemberEntity;
+import com.zitao.gulimall.member.vo.MemberLoginVo;
+import com.zitao.gulimall.member.vo.MemberRegisterVo;
 
 import java.util.Map;
 
@@ -16,5 +18,9 @@ import java.util.Map;
 public interface MemberService extends IService<MemberEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void register(MemberRegisterVo registerVo);
+
+    MemberEntity login(MemberLoginVo loginVo);
 }
 

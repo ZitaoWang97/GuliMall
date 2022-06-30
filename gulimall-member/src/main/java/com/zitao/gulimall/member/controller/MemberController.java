@@ -3,7 +3,12 @@ package com.zitao.gulimall.member.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.zitao.common.exception.BizCodeEnume;
+import com.zitao.gulimall.member.exception.PhoneNumExistException;
+import com.zitao.gulimall.member.exception.UserExistException;
 import com.zitao.gulimall.member.feign.CouponFeignService;
+import com.zitao.gulimall.member.vo.MemberLoginVo;
+import com.zitao.gulimall.member.vo.MemberRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +35,32 @@ import com.zitao.common.utils.R;
 public class MemberController {
     @Autowired
     private MemberService memberService;
+
+    /**
+     * 注册会员
+     * @return
+     */
+    @RequestMapping("/register")
+    public R register(@RequestBody MemberRegisterVo registerVo) {
+        try {
+            memberService.register(registerVo);
+        } catch (UserExistException userException) {
+            return R.error(BizCodeEnume.USER_EXIST_EXCEPTION.getCode(), BizCodeEnume.USER_EXIST_EXCEPTION.getMsg());
+        } catch (PhoneNumExistException phoneException) {
+            return R.error(BizCodeEnume.PHONE_EXIST_EXCEPTION.getCode(), BizCodeEnume.PHONE_EXIST_EXCEPTION.getMsg());
+        }
+        return R.ok();
+    }
+
+    @RequestMapping("/login")
+    public R login(@RequestBody MemberLoginVo loginVo) {
+        MemberEntity entity=memberService.login(loginVo);
+        if (entity!=null){
+            return R.ok().put("memberEntity",entity);
+        }else {
+            return R.error(BizCodeEnume.LOGINACCT_PASSWORD_EXCEPTION.getCode(), BizCodeEnume.LOGINACCT_PASSWORD_EXCEPTION.getMsg());
+        }
+    }
 
     // 测试远程调用coupon微服务
     @Autowired

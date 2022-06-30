@@ -1,6 +1,7 @@
 package com.zitao.gulimall.thirdparty;
 
 import com.aliyun.oss.OSSClient;
+import com.zitao.gulimall.thirdparty.component.SmsComponent;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,14 @@ public class GulimallThirdPartyApplicationTests {
     @Autowired
     OSSClient ossClient;
 
+    @Autowired
+    SmsComponent smsComponent;
+
+    @Test
+    public void testSendCode() {
+        smsComponent.sendCode("18867136096","906929");
+    }
+
     @Test
     public void testUpload() throws Exception {
         // 填写Bucket名称，例如examplebucket。
@@ -32,5 +41,7 @@ public class GulimallThirdPartyApplicationTests {
         ossClient.shutdown();
         System.out.println("上传成功...");
     }
+
+
 
 }

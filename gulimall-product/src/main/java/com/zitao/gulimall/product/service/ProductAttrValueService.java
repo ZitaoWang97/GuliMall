@@ -3,6 +3,7 @@ package com.zitao.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zitao.common.utils.PageUtils;
 import com.zitao.gulimall.product.entity.ProductAttrValueEntity;
+import com.zitao.gulimall.product.vo.SpuItemAttrGroupVo;
 
 import java.util.List;
 import java.util.Map;
@@ -21,5 +22,7 @@ public interface ProductAttrValueService extends IService<ProductAttrValueEntity
     List<ProductAttrValueEntity> listAttrsforSpu(Long spuId);
 
     void updateSpuAttrs(Long spuId, List<ProductAttrValueEntity> attrValueEntities);
+
+    List<SpuItemAttrGroupVo> getProductGroupAttrsBySpuId(Long spuId, Long catalogId);
 }
 
