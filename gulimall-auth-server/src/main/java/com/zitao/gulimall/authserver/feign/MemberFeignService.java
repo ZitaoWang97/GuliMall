@@ -16,7 +16,6 @@ public interface MemberFeignService {
     @RequestMapping("member/member/register")
     R register(@RequestBody UserRegisterVo registerVo);
 
-
     @RequestMapping("member/member/login")
      R login(@RequestBody UserLoginVo loginVo);
 
