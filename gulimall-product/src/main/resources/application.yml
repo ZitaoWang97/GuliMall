@@ -4,15 +4,16 @@ spring:
     url: jdbc:mysql://192.168.56.10:3306/gulimall_pms
     username: root
     password: root
+  # nacos注册中心配置
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-    alicloud:
-      access-key: LTAI5tEmjWJmidi9c3YTseRf
-      secret-key: ZmoZ8IDnA4ObqWkwfk7QIR0ewaAQMs
-      oss:
-        endpoint: oss-eu-central-1.aliyuncs.com
+#    alicloud:  都放在third-party模块里
+#      access-key: LTAI5tEmjWJmidi9c3YTseRf
+#      secret-key: ZmoZ8IDnA4ObqWkwfk7QIR0ewaAQMs
+#      oss:
+#        endpoint: oss-eu-central-1.aliyuncs.com
   application:
     name: gulimall-product
   jackson:
@@ -30,10 +31,9 @@ spring:
       cache-null-values: true
       use-key-prefix: true
 
-
-
 mybatis-plus:
-  mapper-locations: classpath:/mapper/**/*.xml  # 只扫描自己类下的mapper
+  mapper-locations: classpath:/mapper/**/*.xml
+  # 只扫描自己类下的mapper，告诉mybatis-plus sql映射文件的位置
   global-config:
     db-config:
       id-type: auto # 自增主键

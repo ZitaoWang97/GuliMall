@@ -10,7 +10,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
 @Documented
-@Constraint(validatedBy = {ListValueConstraintValidator.class})
+// 将注解与自定义的校验器进行关联
+@Constraint(validatedBy = {ListValueConstraintValidator.class}) // 可以适配多个校验器
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 public @interface ListValue {

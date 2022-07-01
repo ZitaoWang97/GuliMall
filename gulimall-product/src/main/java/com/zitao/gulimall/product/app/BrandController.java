@@ -56,6 +56,9 @@ public class BrandController {
 
     /**
      * 保存
+     * BindingResult result： 校验结果，可以拿到错误属性和对应的信息
+     * 不标注的话，所有的异常都被SpringMVC统一集中处理
+     * @Validated：分组校验
      */
     @RequestMapping("/save")
     public R save(@Validated(AddGroup.class) @RequestBody BrandEntity brand /**BindingResult result*/) {

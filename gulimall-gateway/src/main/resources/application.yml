@@ -66,7 +66,6 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
 
-
         - id: gulimall_host_route
           uri: lb://gulimall-product
           predicates:
@@ -81,3 +80,14 @@ spring:
           uri: lb://gulimall-auth-server
           predicates:
             - Host=auth.gulimall.com
+
+
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  application:
+    name: gulimall-gateway
+
+server:
+  port: 88
+

@@ -12,6 +12,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @MapperScan("com.zitao.gulimall.product.dao")
+// 在主程序应用类上使用`@MapperScan("com.zitao.boot.mapper")` 注解简化，Mapper接口就可以不用标注`@Mapper`注解
 public class GulimallProductApplication {
 
     public static void main(String[] args) {

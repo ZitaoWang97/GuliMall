@@ -17,6 +17,7 @@ import javax.validation.constraints.*;
 
 /**
  * 品牌
+ * 通过JSR303提供的注解来进行数据的校验
  *
  * @author Zitao Wang
  * @email zitao.wang@tum.de
@@ -53,7 +54,7 @@ public class BrandEntity implements Serializable {
      * 显示状态[0-不显示；1-显示]
      */
     @NotNull(groups = {AddGroup.class, UpdateStatusGroup.class})
-    @ListValue(vals = {0, 1}, groups = {AddGroup.class, UpdateStatusGroup.class})
+    @ListValue(vals = {0, 1}, groups = {AddGroup.class, UpdateStatusGroup.class}) // 自定义校验
     private Integer showStatus;
     /**
      * 检索首字母
@@ -64,7 +65,7 @@ public class BrandEntity implements Serializable {
     /**
      * 排序
      */
-    @NotNull(groups = {AddGroup.class})
+    @NotNull(groups = {AddGroup.class}) // Integer不能用@NotEmpty来约束
     @Min(value = 0, message = "排序必须大于等于0", groups = {AddGroup.class, UpdateGroup.class})
     private Integer sort;
 

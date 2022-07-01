@@ -59,26 +59,38 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         // 2. 组装成父子树形结构
         // 2.1. 找到所有一级分类
         List<CategoryEntity> level1Menus = entities.stream().filter(categoryEntity ->
-                categoryEntity.getParentCid() == 0
+                        categoryEntity.getParentCid() == 0
+                // 由{return categoryEntity.getParentCid() == 0;}省略而来
         ).map((menu) -> {
             menu.setChildren(getChildren(menu, entities));
             return menu;
         }).sorted((menu1, menu2) -> {
-            return (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort());
+            // sort字段为Integer，可能为null
+            return (menu1.getSort() == null ? 0 : menu1.getSort())
+                    - (menu2.getSort() == null ? 0 : menu2.getSort());
         }).collect(Collectors.toList());
         return level1Menus;
     }
 
+    /**
+     * 递归查所有分类的子分类
+     *
+     * @param root
+     * @param all
+     * @return
+     */
     private List<CategoryEntity> getChildren(CategoryEntity root, List<CategoryEntity> all) {
-        List<CategoryEntity> children = all.stream().filter(categoryEntity -> {
-            return categoryEntity.getParentCid() == root.getCatId();
-        }).map(categoryEntity -> {
-            // 递归寻找子菜单，直到三级菜单
+        List<CategoryEntity> children = all.stream().filter(categoryEntity ->
+            root.getCatId() == categoryEntity.getParentCid()
+            // 当前分类id等于所有分类id里的parent_id时，说明找到。三级分类在这一层就全为false，返回null
+        ).map(categoryEntity -> {
+            // 递归寻找子菜单，直到三级
             categoryEntity.setChildren(getChildren(categoryEntity, all));
             return categoryEntity;
         }).sorted((menu1, menu2) -> {
             // 菜单的排序
-            return (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort());
+            return (menu1.getSort() == null ? 0 : menu1.getSort())
+                    - (menu2.getSort() == null ? 0 : menu2.getSort());
         }).collect(Collectors.toList());
         return children;
     }
@@ -86,6 +98,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     @Override
     public void removeMenuByIds(List<Long> asList) {
         // TODO 检查当前删除菜单是否被别的地方引用
+
+        // 这个时直接删除，用的不多；一般多用逻辑删除
         baseMapper.deleteBatchIds(asList);
     }
 
@@ -99,7 +113,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Override
     @Transactional
-    @CacheEvict(value = {"category"},allEntries = true)
+    @CacheEvict(value = {"category"}, allEntries = true)
 //    @Caching(evict = {
 //            @CacheEvict(value = {"category"},key = "getLevel1Categories"),
 //            @CacheEvict(value = {"category"},key = "getCatalogJsonDbWithSpringCache")
@@ -122,7 +136,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         lock.lock(10, TimeUnit.SECONDS);
         try {
             categoryMap = getCategoryMap();
-        }  finally {
+        } finally {
             lock.unlock();
             return categoryMap;
         }
@@ -166,6 +180,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      * 查询redis中是否存在数据，否则就查询数据库
+     *
      * @return
      */
     public Map<String, List<Catalog2Vo>> getCategoryMap() {
@@ -189,6 +204,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      * 查询数据库
+     *
      * @return
      */
     private Map<String, List<Catalog2Vo>> getCategoriesDb() {

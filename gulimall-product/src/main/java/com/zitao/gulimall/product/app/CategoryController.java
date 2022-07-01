@@ -35,7 +35,6 @@ public class CategoryController {
     @RequestMapping("/list/tree")
     public R list(){
         List<CategoryEntity> entityList = categoryService.listWithTree();
-
         return R.ok().put("data", entityList);
     }
 
@@ -81,12 +80,12 @@ public class CategoryController {
 
     /**
      * 删除
-     * @RequestBody:需要去获取请求体，必须发送post请求
+     * @RequestBody:需要去获取请求体，必须发送post请求，获取json并且封装成对象
      * SpringMVC自动将请求体的数据（json）转为对应的对象
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] catIds){
-        // 1. 检查当前删除菜单是否被别的地方引用
+        // 检查当前删除分类是否被别的地方引用
 //		categoryService.removeByIds(Arrays.asList(catIds));
 		categoryService.removeMenuByIds(Arrays.asList(catIds));
 
