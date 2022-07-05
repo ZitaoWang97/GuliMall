@@ -48,18 +48,22 @@ public class SkuFullReductionServiceImpl extends ServiceImpl<SkuFullReductionDao
 
     @Override
     public void saveSkuReductionTo(SkuReductionTo skuReductionTo) {
+        // sms_sku_full_reduction
         SkuFullReductionEntity skuFullReductionEntity = new SkuFullReductionEntity();
         BeanUtils.copyProperties(skuReductionTo, skuFullReductionEntity);
         if (skuReductionTo.getFullPrice().compareTo(new BigDecimal("0")) == 1) {
             this.baseMapper.insert(skuFullReductionEntity);
         }
 
+        // sms_sku_ladder
         SkuLadderEntity skuLadderEntity = new SkuLadderEntity();
         BeanUtils.copyProperties(skuReductionTo, skuLadderEntity);
+        skuLadderEntity.setAddOther(skuReductionTo.getCountStatus());
         if (skuReductionTo.getFullCount() > 0) {
             skuLadderService.save(skuLadderEntity);
         }
 
+        // sms_member_price
         List<MemberPrice> memberPrice = skuReductionTo.getMemberPrice();
         List<MemberPriceEntity> collect = memberPrice.stream().map(item -> {
             MemberPriceEntity priceEntity = new MemberPriceEntity();

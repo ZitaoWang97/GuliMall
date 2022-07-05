@@ -53,10 +53,13 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     public void saveDetail(CategoryBrandRelationEntity categoryBrandRelation) {
         Long brandId = categoryBrandRelation.getBrandId();
         Long catelogId = categoryBrandRelation.getCatelogId();
+        // 查询品牌和分类的name
         BrandEntity brandEntity = brandDao.selectById(brandId);
         CategoryEntity categoryEntity = categoryDao.selectById(catelogId);
+        // 设置到对象中
         categoryBrandRelation.setCatelogName(categoryEntity.getName());
         categoryBrandRelation.setBrandName(brandEntity.getName());
+        // 保存
         this.save(categoryBrandRelation);
     }
 
@@ -65,6 +68,7 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
         CategoryBrandRelationEntity categoryBrandRelationEntity = new CategoryBrandRelationEntity();
         categoryBrandRelationEntity.setBrandId(brandId);
         categoryBrandRelationEntity.setBrandName(name);
+        // 所有brand_id的brand_name都得到更新
         this.update(categoryBrandRelationEntity,
                 new UpdateWrapper<CategoryBrandRelationEntity>().eq("brand_id", brandId));
     }
@@ -76,7 +80,8 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
 
     @Override
     public List<BrandEntity> getBrandsByCatId(Long catelogId) {
-        List<CategoryBrandRelationEntity> entityList = relationDao.selectList(new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", catelogId));
+        List<CategoryBrandRelationEntity> entityList = relationDao.selectList(
+                new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", catelogId));
         List<BrandEntity> collect = entityList.stream().map(item -> {
             Long brandId = item.getBrandId();
             BrandEntity byId = brandService.getById(brandId);

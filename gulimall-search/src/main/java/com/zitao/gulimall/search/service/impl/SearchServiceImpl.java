@@ -53,12 +53,21 @@ public class SearchServiceImpl implements SearchService {
     @Autowired
     private ProductFeignService productFeignService;
 
+    /**
+     * 用es进行商品页面的检索
+     *
+     * @param searchParam
+     * @return
+     */
     @Override
     public SearchResult getSearchResult(SearchParam searchParam) {
         SearchResult searchResult = null;
+        // 1. 准备检索请求
         SearchRequest request = bulidSearchRequest(searchParam);
         try {
+            // 2. 执行检索请求
             SearchResponse searchResponse = restHighLevelClient.search(request, GulimallElasticSearchConfig.COMMON_OPTIONS);
+            // 3. 分析响应数据封装成我们需要的格式
             searchResult = bulidSearchResult(searchParam, searchResponse);
         } catch (IOException e) {
             e.printStackTrace();
@@ -195,41 +204,50 @@ public class SearchServiceImpl implements SearchService {
     }
 
 
+    /**
+     * 构建检索请求
+     *
+     * @param searchParam
+     * @return
+     */
     private SearchRequest bulidSearchRequest(SearchParam searchParam) {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        /**
+         * 查询：模糊匹配 过滤（按照属性、分类、品牌、价格区间、库存）
+         */
         //1. 构建bool query
-//        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        //1.1 bool must
+        //1.1 bool must 模糊匹配
         if (!StringUtils.isEmpty(searchParam.getKeyword())) {
             boolQueryBuilder.must(QueryBuilders.matchQuery("skuTitle", searchParam.getKeyword()));
         }
-
-        //1.2 bool filter
-        //1.2.1 catalog
+        //1.2 bool filter 过滤（按照属性、分类、品牌、价格区间、库存）
+        //1.2.1 catalog 三级分类id
         if (searchParam.getCatalog3Id() != null) {
             boolQueryBuilder.filter(QueryBuilders.termQuery("catalogId", searchParam.getCatalog3Id()));
         }
-        //1.2.2 brand
+        //1.2.2 brand 品牌id
         if (searchParam.getBrandId() != null && searchParam.getBrandId().size() > 0) {
             boolQueryBuilder.filter(QueryBuilders.termsQuery("brandId", searchParam.getBrandId()));
         }
-        //1.2.3 hasStock
+        //1.2.3 hasStock 库存
         if (searchParam.getHasStock() != null) {
             boolQueryBuilder.filter(QueryBuilders.termQuery("hasStock", searchParam.getHasStock() == 1));
         }
-        //1.2.4 priceRange
-        RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("skuPrice");
+        //1.2.4 priceRange 价格范围 1_500 / _500 / 500_ 三种情况
         if (!StringUtils.isEmpty(searchParam.getSkuPrice())) {
+            RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("skuPrice");
             String[] prices = searchParam.getSkuPrice().split("_");
             if (prices.length == 1) {
                 if (searchParam.getSkuPrice().startsWith("_")) {
+                    // _500
                     rangeQueryBuilder.lte(Integer.parseInt(prices[0]));
                 } else {
+                    // 500_
                     rangeQueryBuilder.gte(Integer.parseInt(prices[0]));
                 }
             } else if (prices.length == 2) {
-                //_6000会截取成["","6000"]
+                // 1_500
                 if (!prices[0].isEmpty()) {
                     rangeQueryBuilder.gte(Integer.parseInt(prices[0]));
                 }
@@ -237,27 +255,32 @@ public class SearchServiceImpl implements SearchService {
             }
             boolQueryBuilder.filter(rangeQueryBuilder);
         }
-        //1.2.5 attrs-nested
-        //attrs=1_5寸:8寸&2_16G:8G
+        //1.2.5 attrs-nested 属性
+        //attrs=1_5寸:8寸&attrs=2_16G:8G
         List<String> attrs = searchParam.getAttrs();
-        BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
         if (attrs != null && attrs.size() > 0) {
             attrs.forEach(attr -> {
+                // 每一个必须都得生成一个nested查询
+                BoolQueryBuilder queryBuilder = new BoolQueryBuilder();
+                // attr : "1_5寸:8寸"
                 String[] attrSplit = attr.split("_");
+                // 检索的属性id
                 queryBuilder.must(QueryBuilders.termQuery("attrs.attrId", attrSplit[0]));
+                // 检索的属性值
                 String[] attrValues = attrSplit[1].split(":");
                 queryBuilder.must(QueryBuilders.termsQuery("attrs.attrValue", attrValues));
+                NestedQueryBuilder nestedQueryBuilder = QueryBuilders.nestedQuery("attrs", queryBuilder, ScoreMode.None);
+                boolQueryBuilder.filter(nestedQueryBuilder);
             });
         }
-        NestedQueryBuilder nestedQueryBuilder = QueryBuilders.nestedQuery("attrs", queryBuilder, ScoreMode.None);
-        boolQueryBuilder.filter(nestedQueryBuilder);
         //1. bool query构建完成
         searchSourceBuilder.query(boolQueryBuilder);
 
-        //2. sort  eg:sort=saleCount_desc/asc
+        //2. sort  sort=saleCount_desc/asc
         if (!StringUtils.isEmpty(searchParam.getSort())) {
             String[] sortSplit = searchParam.getSort().split("_");
-            searchSourceBuilder.sort(sortSplit[0], sortSplit[1].equalsIgnoreCase("asc") ? SortOrder.ASC : SortOrder.DESC);
+            searchSourceBuilder.sort(sortSplit[0],
+                    sortSplit[1].equalsIgnoreCase("asc") ? SortOrder.ASC : SortOrder.DESC);
         }
 
         //3. 分页

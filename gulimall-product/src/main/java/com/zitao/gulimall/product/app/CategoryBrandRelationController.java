@@ -44,7 +44,7 @@ public class CategoryBrandRelationController {
 
 
     /**
-     * 获取当前品牌关联的所有分类列表
+     * 获取当前品牌关联的所有分类列表：一对多关系
      */
     @GetMapping(value = "/catelog/list")
     public R catelogList(@RequestParam("brandId") Long brandId) {
@@ -78,6 +78,7 @@ public class CategoryBrandRelationController {
 
     /**
      * 保存
+     * 品牌和分类的名字也要保存
      */
     @RequestMapping("/save")
     public R save(@RequestBody CategoryBrandRelationEntity categoryBrandRelation) {

@@ -46,7 +46,13 @@ public class AttrController {
     }
 
 
-
+    /**
+     * 模糊查询三级分类对应的所有属性（规格参数 和 销售属性）
+     * @param params
+     * @param catelogId 三级分类id
+     * @param type 规格参数："base" 销售属性："sale"
+     * @return
+     */
     @GetMapping("/{attrType}/list/{catelogId}")
     public R baseAttrList(@RequestParam Map<String, Object> params,
                           @PathVariable("catelogId") Long catelogId,
@@ -70,6 +76,7 @@ public class AttrController {
 
     /**
      * 信息
+     * 修改属性时，要回显三级分类的完整路径
      */
     @RequestMapping("/info/{attrId}")
     public R info(@PathVariable("attrId") Long attrId) {
@@ -80,6 +87,7 @@ public class AttrController {
 
     /**
      * 保存
+     * 保存属性attr的同时还要保存属性分组关联信息attr_attrgroup
      */
     @RequestMapping("/save")
     public R save(@RequestBody AttrVo attr) {

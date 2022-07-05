@@ -11,7 +11,7 @@ import java.util.List;
 public class SearchResult {
 
     /**
-     * 查询到的所有商品信息
+     * 从es查询到的所有商品信息
      */
     private List<SkuEsModel> product;
 

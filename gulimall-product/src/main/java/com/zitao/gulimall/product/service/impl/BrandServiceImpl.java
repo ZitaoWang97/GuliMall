@@ -25,11 +25,18 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
     @Autowired
     CategoryBrandRelationService categoryBrandRelationService;
 
+    /**
+     * 模糊查询
+     * @param params
+     * @return
+     */
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        // 获取key，检索关键字
         String key = (String) params.get("key");
         QueryWrapper<BrandEntity> wrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(key)) {
+            // id或者name模糊匹配到关键词
             wrapper.eq("brand_id", key).or().like("name", key);
         }
         IPage<BrandEntity> page = this.page(
@@ -39,12 +46,18 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
         return new PageUtils(page);
     }
 
+    /**
+     * 当品牌名字被更新的时候，不仅brand数据库本身要被更新。
+     * 与brand品牌相关联的表中的brand_name也要被更新
+     * @param brand
+     */
     @Override
     @Transactional
     public void updateDetail(BrandEntity brand) {
         this.updateById(brand);
         if (!StringUtils.isEmpty(brand.getName())) {
             categoryBrandRelationService.updateBrand(brand.getBrandId(),brand.getName());
+            // TODO 更新其他与brand_name相关联的表
         }
     }
 

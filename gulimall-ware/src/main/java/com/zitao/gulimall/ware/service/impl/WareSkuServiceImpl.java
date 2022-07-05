@@ -54,18 +54,27 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
     }
 
 
+    /**
+     * 采购完成 添加库存
+     *
+     * @param skuId
+     * @param wareId
+     * @param skuNum
+     */
     @Transactional
     @Override
     public void addStock(Long skuId, Long wareId, Integer skuNum) {
         Integer count = this.baseMapper.selectCount(
                 new QueryWrapper<WareSkuEntity>().eq("sku_id", skuId).eq("ware_id", wareId));
         if (count == 0) {
+            // 如果是空的，则是insert操作
             WareSkuEntity wareSkuEntity = new WareSkuEntity();
             wareSkuEntity.setSkuId(skuId);
             wareSkuEntity.setWareId(wareId);
             wareSkuEntity.setStock(skuNum);
             wareSkuEntity.setStockLocked(0);
             //查出skuname并设置
+            // TODO 有什么办法异常出现以后不回滚？高级篇见
             try {
                 R info = productFeignService.info(skuId);
                 Map<String, Object> data = (Map<String, Object>) info.get("skuInfo");
@@ -74,6 +83,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             }
             this.baseMapper.insert(wareSkuEntity);
         } else {
+            // 否则是update操作
             wareSkuDao.addStock(skuId, wareId, skuNum);
         }
     }
@@ -83,8 +93,8 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
         List<SkuHasStockVo> skuHasStockVos = ids.stream().map(id -> {
             SkuHasStockVo skuHasStockVo = new SkuHasStockVo();
             skuHasStockVo.setSkuId(id);
-            long count = baseMapper.getSkuStock(id);
-            skuHasStockVo.setHasStock(count > 0);
+            Long count = baseMapper.getSkuStock(id);
+            skuHasStockVo.setHasStock(count == null ? false : count > 0);
             return skuHasStockVo;
         }).collect(Collectors.toList());
         return skuHasStockVos;

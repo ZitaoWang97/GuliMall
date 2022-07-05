@@ -17,11 +17,19 @@ public class SearchController {
     @Autowired
     private SearchService searchService;
 
-    @GetMapping(value = {"/search.html","/"})
+    /**
+     * 自动将页面传递的查询参数封装为vo对象
+     *
+     * @param searchParam
+     * @param model
+     * @param request
+     * @return
+     */
+    @GetMapping(value = {"/list.html", "/"})
     public String getSearchPage(SearchParam searchParam, Model model, HttpServletRequest request) {
         searchParam.set_queryString(request.getQueryString());
-        SearchResult result=searchService.getSearchResult(searchParam);
+        SearchResult result = searchService.getSearchResult(searchParam);
         model.addAttribute("result", result);
-        return "search";
+        return "list";
     }
 }

@@ -61,6 +61,7 @@ public class CategoryController {
 
     /**
      * 修改
+     * 级联更新
      */
     @RequestMapping("/update")
     public R update(@RequestBody CategoryEntity category){

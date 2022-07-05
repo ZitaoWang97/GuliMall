@@ -82,6 +82,7 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
             queryWrapper.eq("brand_id", brandId);
         }
 
+        // 在价格区间内
         String min = (String) params.get("min");
         if (!StringUtils.isEmpty(min)) {
             BigDecimal minDecimal = new BigDecimal(min);
@@ -93,7 +94,7 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
         if (!StringUtils.isEmpty(max)) {
             BigDecimal maxDecimal = new BigDecimal(max);
             if (maxDecimal.compareTo(new BigDecimal(0))==1)
-                queryWrapper.le("price", maxDecimal);
+                queryWrapper.le("price", max);
         }
         IPage<SkuInfoEntity> page = this.page(
                 new Query<SkuInfoEntity>().getPage(params),

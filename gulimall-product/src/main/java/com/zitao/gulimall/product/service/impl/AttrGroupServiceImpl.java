@@ -33,6 +33,7 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<AttrGroupEntity> page = this.page(
+                // 将简短获取来的参数params封装为IPage对象，包含当前页码、每页记录数、排序等信息
                 new Query<AttrGroupEntity>().getPage(params),
                 new QueryWrapper<AttrGroupEntity>()
         );
@@ -43,6 +44,7 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 
     @Override
     public PageUtils queryPage(Map<String, Object> params, Long catelogId) {
+        // 获取检索的参数 前端中为“key”参数
         String key = (String) params.get("key");
         QueryWrapper<AttrGroupEntity> wrapper = new QueryWrapper<AttrGroupEntity>();
         if (!StringUtils.isEmpty(key)) {
@@ -68,7 +70,8 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 
     @Override
     public List<AttrGroupWithAttrsVo> getAttrGroupWithAttrByCatelogId(Long catId) {
-        List<AttrGroupEntity> attrGroupEntities = baseMapper.selectList(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catId));
+        List<AttrGroupEntity> attrGroupEntities = baseMapper.selectList(
+                new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catId));
         List<AttrGroupWithAttrsVo> collect = attrGroupEntities.stream().map(group -> {
                     AttrGroupWithAttrsVo vo = new AttrGroupWithAttrsVo();
                     BeanUtils.copyProperties(group, vo);

@@ -1,4 +1,4 @@
-//GET gulimall_product/_search
+//GET gulimall-product/_search
 {
   "query": {
     "bool": {

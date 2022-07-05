@@ -16,4 +16,5 @@ import org.apache.ibatis.annotations.Param;
 public interface CategoryBrandRelationDao extends BaseMapper<CategoryBrandRelationEntity> {
 
     void updateCategory(@Param("catId") Long catId, @Param("name") String name);
+    // 为每一个参数设置一个别名，方便
 }

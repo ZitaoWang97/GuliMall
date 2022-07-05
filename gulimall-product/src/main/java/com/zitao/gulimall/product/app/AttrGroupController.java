@@ -59,12 +59,18 @@ public class AttrGroupController {
         return R.ok();
     }
 
+    /**
+     * 根据属性分组id找到分组内所有的属性
+     * @param attrgroupId
+     * @return
+     */
     @GetMapping("/{attrgroupId}/attr/relation")
     public R attrRelation(@PathVariable("attrgroupId") Long attrgroupId) {
         List<AttrEntity> entities = attrService.getRelationAttr(attrgroupId);
         return R.ok().put("data", entities);
     }
 
+    // http://localhost:88/api/product/attrgroup/2/noattr/relation?t=1656747489655&page=1&limit=10&key=
     @GetMapping("/{attrgroupId}/noattr/relation")
     public R attrNoRelation(@PathVariable("attrgroupId") Long attrgroupId,
                             @RequestParam Map<String, Object> params){
@@ -74,6 +80,7 @@ public class AttrGroupController {
 
     /**
      * 列表
+     * 根据三级分类来查属性分组
      */
     @RequestMapping("/list/{catelogId}")
     public R list(@RequestParam Map<String, Object> params,
@@ -91,9 +98,11 @@ public class AttrGroupController {
     @RequestMapping("/info/{attrGroupId}")
     public R info(@PathVariable("attrGroupId") Long attrGroupId) {
         AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
+        // 查询属性分组所在三级分类的完整路径，用于数据回显
         Long catelogId = attrGroup.getCatelogId();
         Long[] path = categoryService.findCategoryPath(catelogId);
         attrGroup.setCatelogPath(path);
+
         return R.ok().put("attrGroup", attrGroup);
     }
 

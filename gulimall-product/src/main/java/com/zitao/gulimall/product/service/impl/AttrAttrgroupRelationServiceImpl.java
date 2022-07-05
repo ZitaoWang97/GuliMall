@@ -40,7 +40,6 @@ public class AttrAttrgroupRelationServiceImpl extends ServiceImpl<AttrAttrgroupR
             return relationEntity;
         }).collect(Collectors.toList());
         this.saveBatch(collect);
-
     }
 
 }

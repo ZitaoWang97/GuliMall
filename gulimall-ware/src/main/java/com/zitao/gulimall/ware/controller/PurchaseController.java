@@ -1,6 +1,7 @@
 package com.zitao.gulimall.ware.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,11 @@ public class PurchaseController {
         return R.ok();
     }
 
+    /**
+     * 领取采购单
+     * @param ids 采购单id
+     * @return
+     */
     @PostMapping("/received")
     public R ReceivedPurchase(@RequestBody List<Long> ids) {
         purchaseService.ReceivedPurchase(ids);
@@ -79,6 +85,8 @@ public class PurchaseController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody PurchaseEntity purchase){
+        purchase.setCreateTime(new Date());
+        purchase.setUpdateTime(new Date());
 		purchaseService.save(purchase);
 
         return R.ok();

@@ -23,7 +23,7 @@ public class SearchParam {
     private Long catalog3Id;
 
     /**
-     * 排序条件：sort=price/salecount/hotscore_desc/asc
+     * 排序条件：sort=price/salecount/hotscore(综合排序)_desc/asc
      */
     private String sort;
 
@@ -34,6 +34,7 @@ public class SearchParam {
 
     /**
      * 价格区间查询
+     * 1_500 / _500 / 500_ 三种情况
      */
     private String skuPrice;
 

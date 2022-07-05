@@ -32,18 +32,22 @@ public class ProductSaveServiceimpl implements ProductSaveService {
         BulkRequest bulkRequest = new BulkRequest();
         for (SkuEsModel skuEsModel : skuEsModels) {
             IndexRequest indexRequest = new IndexRequest(EsConstant.PRODUCT_INDEX);
+            indexRequest.id(skuEsModel.getSkuId().toString());
             String s = JSON.toJSONString(skuEsModel);
             indexRequest.source(s, XContentType.JSON);
             bulkRequest.add(indexRequest);
         }
-        BulkResponse bulkResponse = restHighLevelClient.bulk(bulkRequest, GulimallElasticSearchConfig.COMMON_OPTIONS);
+        BulkResponse bulkResponse = restHighLevelClient.bulk(bulkRequest,
+                GulimallElasticSearchConfig.COMMON_OPTIONS);
         boolean hasFailures = bulkResponse.hasFailures();
         List<String> collect = Arrays.asList(bulkResponse.getItems()).stream().map(item -> {
             return item.getId();
         }).collect(Collectors.toList());
-
-        log.info("商品上架完成：{}",collect);
-
+        if (hasFailures) {
+            log.info("商品上架有失败：{}", collect);
+        } else {
+            log.info("商品上架完成：{}", collect);
+        }
         return !hasFailures;
     }
 }

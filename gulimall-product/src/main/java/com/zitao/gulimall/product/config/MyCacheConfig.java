@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 
+/**
+ * 自定义缓存配置
+ */
 @Configuration
 @EnableCaching
 @EnableConfigurationProperties(CacheProperties.class)
