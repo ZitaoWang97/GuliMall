@@ -6,6 +6,9 @@ spring:
     password: root
   # nacos注册中心配置
   cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8333
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
@@ -56,3 +59,14 @@ gulimall:
     corePoolSize: 10
     maxPoolSize: 20
     keepAliveTime: 300
+
+# 开启熔断保护
+feign:
+  sentinel:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

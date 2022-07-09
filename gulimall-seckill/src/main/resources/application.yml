@@ -1,0 +1,43 @@
+spring:
+  redis:
+    host: 192.168.56.10
+    port: 6379
+  application:
+    name: gulimall-seckill
+  session:
+    store-type: redis
+  rabbitmq:
+    host: 192.168.56.10
+    username: guest
+    password: guest
+    listener:
+      simple:
+        acknowledge-mode: manual
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8333
+  zipkin:
+    base-url: http://localhost:9411
+    sender:
+      type: web
+    discovery-client-enabled: false
+
+  sleuth:
+    sampler:
+      probability: 1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+server:
+  port: 15000
+
+
+

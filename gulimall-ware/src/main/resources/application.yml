@@ -10,7 +10,7 @@ spring:
         server-addr: 127.0.0.1:8848
     sentinel:
       transport:
-        dashboard: localhost:8080
+        dashboard: localhost:8333
   application:
     name: gulimall-ware
   jackson:
@@ -44,3 +44,9 @@ server:
 logging:
   level:
     com.zitao.gulimall: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

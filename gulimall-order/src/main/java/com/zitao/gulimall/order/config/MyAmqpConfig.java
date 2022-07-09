@@ -1,6 +1,7 @@
 package com.zitao.gulimall.order.config;
 
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -8,13 +9,24 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import javax.annotation.PostConstruct;
 
 @Configuration
 public class MyAmqpConfig {
-    @Autowired
+//    @Autowired
     RabbitTemplate rabbitTemplate;
+
+    @Primary
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        this.rabbitTemplate = rabbitTemplate;
+        rabbitTemplate.setMessageConverter(messageConverter());
+        initRabbitTemplate();
+        return rabbitTemplate;
+    }
 
     @Bean
     public MessageConverter messageConverter() {
@@ -22,7 +34,7 @@ public class MyAmqpConfig {
         return new Jackson2JsonMessageConverter();
     }
 
-    @PostConstruct // MyAmqpConfig对象完成创建后再调用该方法
+//    @PostConstruct // MyAmqpConfig对象完成创建后再调用该方法
     public void initRabbitTemplate() {
         // 设置确认回调
         rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
