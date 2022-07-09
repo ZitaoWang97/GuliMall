@@ -77,4 +77,9 @@ public class R extends HashMap<String, Object> {
 		T t = JSON.parseObject(toJSONString, tTypeReference);
 		return t;
 	}
+
+	public R setData(Object data) {
+		put("data", data);
+		return this;
+	}
 }

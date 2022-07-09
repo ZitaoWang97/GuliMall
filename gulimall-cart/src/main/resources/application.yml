@@ -1,0 +1,40 @@
+server:
+  port: 13000
+
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+#    sentinel:
+#      transport:
+#        dashboard: localhost:8080
+  application:
+    name: gulimall-cart
+  thymeleaf:
+    cache: false
+  redis:
+    host: 192.168.56.10
+  session:
+    store-type: redis
+
+#    sender:
+#      type: web
+#    discovery-client-enabled: false
+#  #采样取值介于 0到1之间，1则表示全部收集
+#  sleuth:
+#    sampler:
+#      probability: 1
+
+# 自定义线程池参数
+gulimall:
+  thread:
+    corePoolSize: 10
+    maxPoolSize: 20
+    keepAliveTime: 300
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

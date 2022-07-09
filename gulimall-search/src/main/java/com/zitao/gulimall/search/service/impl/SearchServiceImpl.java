@@ -75,6 +75,12 @@ public class SearchServiceImpl implements SearchService {
         return searchResult;
     }
 
+    /**
+     * 构建结果数据
+     * @param searchParam
+     * @param searchResponse
+     * @return
+     */
     private SearchResult bulidSearchResult(SearchParam searchParam, SearchResponse searchResponse) {
         SearchResult result = new SearchResult();
         SearchHits hits = searchResponse.getHits();
@@ -119,7 +125,6 @@ public class SearchServiceImpl implements SearchService {
         for (Terms.Bucket bucket : brandAgg.getBuckets()) {
             //3.1 得到品牌id
             Long brandId = bucket.getKeyAsNumber().longValue();
-
             Aggregations subBrandAggs = bucket.getAggregations();
             //3.2 得到品牌图片
             ParsedStringTerms brandImgAgg = subBrandAggs.get("brandImgAgg");
@@ -155,7 +160,6 @@ public class SearchServiceImpl implements SearchService {
         for (Terms.Bucket bucket : attrIdAgg.getBuckets()) {
             //5.1 查询属性id
             Long attrId = bucket.getKeyAsNumber().longValue();
-
             Aggregations subAttrAgg = bucket.getAggregations();
             //5.2 查询属性名
             ParsedStringTerms attrNameAgg = subAttrAgg.get("attrNameAgg");
@@ -185,7 +189,8 @@ public class SearchServiceImpl implements SearchService {
                 try {
                     R r = productFeignService.info(Long.parseLong(split[0]));
                     if (r.getCode() == 0) {
-                        AttrResponseVo attrResponseVo = JSON.parseObject(JSON.toJSONString(r.get("attr")), new TypeReference<AttrResponseVo>() {
+                        AttrResponseVo attrResponseVo = JSON.parseObject(JSON.toJSONString(r.get("attr")),
+                                new TypeReference<AttrResponseVo>() {
                         });
                         navVo.setNavName(attrResponseVo.getAttrName());
                     }
@@ -195,7 +200,7 @@ public class SearchServiceImpl implements SearchService {
                 //6.3 设置面包屑跳转链接
                 String queryString = searchParam.get_queryString();
                 String replace = queryString.replace("&attrs=" + attr, "").replace("attrs=" + attr + "&", "").replace("attrs=" + attr, "");
-                navVo.setLink("http://search.gulimall.com/search.html" + (replace.isEmpty() ? "" : "?" + replace));
+                navVo.setLink("http://search.gulimall.com/list.html" + (replace.isEmpty() ? "" : "?" + replace));
                 return navVo;
             }).collect(Collectors.toList());
             result.setNavs(navVos);
@@ -298,16 +303,17 @@ public class SearchServiceImpl implements SearchService {
 
         //5. 聚合
         //5.1 按照brand聚合
-        TermsAggregationBuilder brandAgg = AggregationBuilders.terms("brandAgg").field("brandId");
-        TermsAggregationBuilder brandNameAgg = AggregationBuilders.terms("brandNameAgg").field("brandName");
+        TermsAggregationBuilder brandAgg = AggregationBuilders.terms("brandAgg").field("brandId").size(50);
+        TermsAggregationBuilder brandNameAgg = AggregationBuilders.terms("brandNameAgg").field("brandName").size(1);
         TermsAggregationBuilder brandImgAgg = AggregationBuilders.terms("brandImgAgg").field("brandImg");
+        // 添加子聚合
         brandAgg.subAggregation(brandNameAgg);
         brandAgg.subAggregation(brandImgAgg);
         searchSourceBuilder.aggregation(brandAgg);
 
         //5.2 按照catalog聚合
         TermsAggregationBuilder catalogAgg = AggregationBuilders.terms("catalogAgg").field("catalogId");
-        TermsAggregationBuilder catalogNameAgg = AggregationBuilders.terms("catalogNameAgg").field("catalogName");
+        TermsAggregationBuilder catalogNameAgg = AggregationBuilders.terms("catalogNameAgg").field("catalogName").size(1);
         catalogAgg.subAggregation(catalogNameAgg);
         searchSourceBuilder.aggregation(catalogAgg);
 

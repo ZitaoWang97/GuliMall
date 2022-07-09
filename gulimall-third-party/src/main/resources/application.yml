@@ -10,9 +10,9 @@ spring:
         endpoint: oss-eu-central-1.aliyuncs.com
         bucket: gulimall-zitao
       sms:
-        host: https://dfsns.market.alicloudapi.com/data/send_sms
-        path: /sms/
-        templateId: 1
+        host: https://dfsns.market.alicloudapi.com
+        path: /data/send_sms
+        templateId: TPL_0000
         appcode: ec9afc62a5c04c2b9ecb3aafa9fc05d4
   application:
     name: gulimall-third-party

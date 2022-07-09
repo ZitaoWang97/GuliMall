@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 
-@EnableRedisHttpSession
+@EnableRedisHttpSession // 整合redis作为session存储
 @EnableDiscoveryClient
 @SpringBootApplication
 @EnableFeignClients

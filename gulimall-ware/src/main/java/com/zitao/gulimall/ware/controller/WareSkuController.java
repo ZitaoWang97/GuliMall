@@ -4,7 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.zitao.common.exception.BizCodeEnume;
+import com.zitao.common.exception.NoStockException;
 import com.zitao.common.to.SkuHasStockVo;
+import com.zitao.gulimall.ware.vo.WareSkuLockVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -81,6 +84,16 @@ public class WareSkuController {
         wareSkuService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
+    }
+
+    @RequestMapping("/lock/order")
+    public R orderLockStock(@RequestBody WareSkuLockVo lockVo) {
+        try {
+            Boolean lock = wareSkuService.orderLockStock(lockVo);
+            return R.ok();
+        } catch (NoStockException e) {
+            return R.error(BizCodeEnume.NO_STOCK_EXCEPTION.getCode(), BizCodeEnume.NO_STOCK_EXCEPTION.getMsg());
+        }
     }
 
 }

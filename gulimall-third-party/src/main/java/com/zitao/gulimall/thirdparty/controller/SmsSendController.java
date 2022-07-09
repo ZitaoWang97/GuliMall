@@ -17,18 +17,18 @@ public class SmsSendController {
     private SmsComponent smsComponent;
 
     /**
-     * 提供给别的服务进行调用
+     * 提供给别的微服务进行调用（auth-server） 而不是前端页面直接调用
+     *
      * @param phone
      * @param code
      * @return
      */
     @ResponseBody
-    @GetMapping(value = "/sendCode")
+    @PostMapping(value = "/sendCode")
     public R sendCode(@RequestParam("phone") String phone, @RequestParam("code") String code) {
-
         //发送验证码
-        smsComponent.sendCode(phone,code);
-        System.out.println(phone+code);
+        smsComponent.sendCode(phone, code);
+        System.out.println(phone + ": " + code);
         return R.ok();
     }
 

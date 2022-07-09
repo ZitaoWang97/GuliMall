@@ -1,8 +1,10 @@
 package com.zitao.gulimall.order.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zitao.common.to.mq.SeckillOrderTo;
 import com.zitao.common.utils.PageUtils;
 import com.zitao.gulimall.order.entity.OrderEntity;
+import com.zitao.gulimall.order.vo.*;
 
 import java.util.Map;
 
@@ -16,5 +18,19 @@ import java.util.Map;
 public interface OrderService extends IService<OrderEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void closeOrder(OrderEntity orderEntity);
+
+    void handlerPayResult(PayAsyncVo payAsyncVo);
+
+    void createSeckillOrder(SeckillOrderTo orderTo);
+
+    OrderConfirmVo confirmOrder();
+
+    SubmitOrderResponseVo submitOrder(OrderSubmitVo submitVo);
+
+    PageUtils getMemberOrderPage(Map<String, Object> params);
+
+    PayVo getOrderPay(String orderSn);
 }
 

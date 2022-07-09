@@ -6,6 +6,7 @@ package com.zitao.common.exception;
  * 12：订单
  * 13：购物车
  * 14：物流
+ * 15：用户
  */
 public enum BizCodeEnume {
     UNKNOWN_EXCEPTION(10000, "系统未知异常"),

@@ -64,7 +64,7 @@
         </b>
         <ul>
             <li>
-                <a href="http://auth.gulimall.com/login.html" class="li_2">你好，[[${session.loginUser==null?"请登录":session.loginUser.nickname}]]</a>
+                <a href="http://auth.gulimall.com/login.html" class="li_2">你好，[[${session.loginUser==null?"请登录":session.loginUser.username}]]</a>
             </li>
             <li>
                 <a href="http://auth.gulimall.com/reg.html">免费注册</a>
@@ -2036,16 +2036,16 @@
     });
     //显示隐藏
     var $li = $(".JD_nav_logo>div:gt(3)").hide();
-      $('.JD_show span').click(function(){
-          if($li.is(':hidden')){
-              $li.show();
-              $(this).css({width:"86px"}).text('收起 ^');
-          }else{
-              $li.hide();
-              $('.JD_show span').css({width:"291px"}).text('更多选项（ CPU核数、网络、机身颜色 等）');
-          }
-          return false;
-      });
+    $('.JD_show span').click(function(){
+        if($li.is(':hidden')){
+            $li.show();
+            $(this).css({width:"86px"}).text('收起 ^');
+        }else{
+            $li.hide();
+            $('.JD_show span').css({width:"291px"}).text('更多选项（ CPU核数、网络、机身颜色 等）');
+        }
+        return false;
+    });
 
 
 

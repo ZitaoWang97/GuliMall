@@ -1,6 +1,7 @@
 package com.zitao.gulimall.member.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,11 @@ import com.zitao.common.utils.R;
 public class MemberReceiveAddressController {
     @Autowired
     private MemberReceiveAddressService memberReceiveAddressService;
+
+    @RequestMapping("/getAddressByUserId")
+    public List<MemberReceiveAddressEntity> getAddressByUserId(@RequestBody Long userId) {
+        return memberReceiveAddressService.getAddressByUserId(userId);
+    }
 
     /**
      * 列表

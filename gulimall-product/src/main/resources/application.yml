@@ -30,6 +30,8 @@ spring:
       key-prefix: CACHE_
       cache-null-values: true # 缓存null值，防止缓存穿透
       use-key-prefix: true
+  session:
+    store-type: redis
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml

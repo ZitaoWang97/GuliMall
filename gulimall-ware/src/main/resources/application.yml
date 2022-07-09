@@ -12,6 +12,19 @@ spring:
     name: gulimall-ware
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  rabbitmq:
+    host: 192.168.56.10
+    username: guest
+    password: guest
+    listener:
+      simple:
+        acknowledge-mode: manual
+#    port: 5672
+#    virtual-host: /
+#    publisher-confirms: true
+#    publisher-returns: true
+#    template:
+#      mandatory: true
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml  #只扫描自己类下的mapper

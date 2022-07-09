@@ -57,7 +57,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         String encodePassword = passwordEncoder.encode(registerVo.getPassword());
         entity.setPassword(encodePassword);
         //3.3 设置会员默认等级
-        //3.3.1 找到会员默认登记
+        //3.3.1 找到会员默认等级
         MemberLevelEntity defaultLevel = memberLevelService.getOne(new QueryWrapper<MemberLevelEntity>().eq("default_status", 1));
         //3.3.2 设置会员等级为默认
         entity.setLevelId(defaultLevel.getId());
@@ -74,6 +74,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
                 .or().eq("mobile", loginAccount));
         if (entity!=null){
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            // 密码是否匹配
             boolean matches = bCryptPasswordEncoder.matches(loginVo.getPassword(), entity.getPassword());
             if (matches){
                 entity.setPassword("");
