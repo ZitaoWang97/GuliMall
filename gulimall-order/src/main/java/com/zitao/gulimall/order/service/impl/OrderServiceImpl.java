@@ -24,6 +24,7 @@ import com.zitao.gulimall.order.service.PaymentInfoService;
 import com.zitao.gulimall.order.to.OrderCreateTo;
 import com.zitao.gulimall.order.to.SpuInfoTo;
 import com.zitao.gulimall.order.vo.*;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,7 +139,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         return confirmVo;
     }
 
-    //    @GlobalTransactional
+    @GlobalTransactional
     @Transactional
     @Override
     public SubmitOrderResponseVo submitOrder(OrderSubmitVo submitVo) {
@@ -175,7 +176,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 R r = wareFeignService.orderLockStock(lockVo);
                 //5.1 锁定库存成功
                 if (r.getCode() == 0) {
-//                    int i = 10 / 0;
                     responseVo.setOrder(order.getOrder());
                     responseVo.setCode(0);
 
@@ -203,12 +203,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     }
 
 
-//    @Override
-//    public OrderEntity getOrderByOrderSn(String orderSn) {
-//        OrderEntity order_sn = this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
-//
-//        return order_sn;
-//    }
+    @Override
+    public OrderEntity getOrderByOrderSn(String orderSn) {
+        OrderEntity order_sn = this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
+
+        return order_sn;
+    }
 
     /**
      * 关闭过期的的订单
@@ -242,7 +242,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         );
         List<OrderEntity> entities = page.getRecords().stream().map(order -> {
             List<OrderItemEntity> orderItemEntities = orderItemService.list(new QueryWrapper<OrderItemEntity>().eq("order_sn", order.getOrderSn()));
-//            order.setItems(orderItemEntities);
+            order.setItems(orderItemEntities);
             return order;
         }).collect(Collectors.toList());
         page.setRecords(entities);
