@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient("gulimall-third-party")
 public interface ThirdPartFeignService {
 
-    @PostMapping(value = "/sms/sendCode")
+    @GetMapping(value = "/sms/sendCode")
     R sendCode(@RequestParam("phone") String phone, @RequestParam("code") String code);
 
 }

@@ -10,11 +10,11 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 
 @EnableRedisHttpSession
 @EnableCaching
-@EnableFeignClients(basePackages = "com.zitao.gulimall.product.feign")
+@EnableFeignClients(basePackages = "com.zitao.gulimall.product.feign") // 开启远程调用功能
 @SpringBootApplication
 @EnableDiscoveryClient
 @MapperScan("com.zitao.gulimall.product.dao")
-// 在主程序应用类上使用`@MapperScan("com.zitao.boot.mapper")` 注解简化，Mapper接口就可以不用标注`@Mapper`注解
+// 在主程序应用类上使用`@MapperScan("com.zitao.boot.mapper")` 注解简化，Dao接口就可以不用标注`@Mapper`注解
 public class GulimallProductApplication {
 
     public static void main(String[] args) {

@@ -40,6 +40,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +69,7 @@ public class SearchServiceImpl implements SearchService {
         try {
             // 2. 执行检索请求
             SearchResponse searchResponse = restHighLevelClient.search(request, GulimallElasticSearchConfig.COMMON_OPTIONS);
-            // 3. 分析响应数据封装成我们需要的格式
+            // 3. 分析响应数据封装成需要的格式
             searchResult = bulidSearchResult(searchParam, searchResponse);
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,6 +79,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * 构建结果数据
+     *
      * @param searchParam
      * @param searchResponse
      * @return
@@ -84,13 +87,13 @@ public class SearchServiceImpl implements SearchService {
     private SearchResult bulidSearchResult(SearchParam searchParam, SearchResponse searchResponse) {
         SearchResult result = new SearchResult();
         SearchHits hits = searchResponse.getHits();
-        //1. 封装查询到的商品信息
+        // 1. 封装查询到的商品信息
         if (hits.getHits() != null && hits.getHits().length > 0) {
             List<SkuEsModel> skuEsModels = new ArrayList<>();
             for (SearchHit hit : hits) {
                 String sourceAsString = hit.getSourceAsString();
                 SkuEsModel skuEsModel = JSON.parseObject(sourceAsString, SkuEsModel.class);
-                //设置高亮属性
+                // 1.1 设置高亮属性
                 if (!StringUtils.isEmpty(searchParam.getKeyword())) {
                     HighlightField skuTitle = hit.getHighlightFields().get("skuTitle");
                     String highLight = skuTitle.getFragments()[0].string();
@@ -101,13 +104,13 @@ public class SearchServiceImpl implements SearchService {
             result.setProduct(skuEsModels);
         }
 
-        //2. 封装分页信息
-        //2.1 当前页码
+        // 2. 封装分页信息
+        // 2.1 当前页码
         result.setPageNum(searchParam.getPageNum());
-        //2.2 总记录数
+        // 2.2 总记录数
         long total = hits.getTotalHits().value;
         result.setTotal(total);
-        //2.3 总页码
+        // 2.3 总页码
         Integer totalPages = (int) total % EsConstant.PRODUCT_PAGESIZE == 0 ?
                 (int) total / EsConstant.PRODUCT_PAGESIZE : (int) total / EsConstant.PRODUCT_PAGESIZE + 1;
         result.setTotalPages(totalPages);
@@ -117,19 +120,19 @@ public class SearchServiceImpl implements SearchService {
         }
         result.setPageNavs(pageNavs);
 
-        //3. 查询结果涉及到的品牌
+        // 3. 查询结果涉及到的品牌
         List<SearchResult.BrandVo> brandVos = new ArrayList<>();
         Aggregations aggregations = searchResponse.getAggregations();
         //ParsedLongTerms用于接收terms聚合的结果，并且可以把key转化为Long类型的数据
         ParsedLongTerms brandAgg = aggregations.get("brandAgg");
         for (Terms.Bucket bucket : brandAgg.getBuckets()) {
-            //3.1 得到品牌id
+            // 3.1 得到品牌id
             Long brandId = bucket.getKeyAsNumber().longValue();
             Aggregations subBrandAggs = bucket.getAggregations();
-            //3.2 得到品牌图片
+            // 3.2 得到品牌图片
             ParsedStringTerms brandImgAgg = subBrandAggs.get("brandImgAgg");
             String brandImg = brandImgAgg.getBuckets().get(0).getKeyAsString();
-            //3.3 得到品牌名字
+            // 3.3 得到品牌名字
             Terms brandNameAgg = subBrandAggs.get("brandNameAgg");
             String brandName = brandNameAgg.getBuckets().get(0).getKeyAsString();
             SearchResult.BrandVo brandVo = new SearchResult.BrandVo(brandId, brandName, brandImg);
@@ -137,14 +140,14 @@ public class SearchServiceImpl implements SearchService {
         }
         result.setBrands(brandVos);
 
-        //4. 查询涉及到的所有分类
+        // 4. 查询涉及到的所有分类
         List<SearchResult.CatalogVo> catalogVos = new ArrayList<>();
         ParsedLongTerms catalogAgg = aggregations.get("catalogAgg");
         for (Terms.Bucket bucket : catalogAgg.getBuckets()) {
-            //4.1 获取分类id
+            // 4.1 获取分类id
             Long catalogId = bucket.getKeyAsNumber().longValue();
             Aggregations subcatalogAggs = bucket.getAggregations();
-            //4.2 获取分类名
+            // 4.2 获取分类名
             ParsedStringTerms catalogNameAgg = subcatalogAggs.get("catalogNameAgg");
             String catalogName = catalogNameAgg.getBuckets().get(0).getKeyAsString();
             SearchResult.CatalogVo catalogVo = new SearchResult.CatalogVo(catalogId, catalogName);
@@ -152,19 +155,19 @@ public class SearchServiceImpl implements SearchService {
         }
         result.setCatalogs(catalogVos);
 
-        //5 查询涉及到的所有属性
+        // 5. 查询涉及到的所有属性
         List<SearchResult.AttrVo> attrVos = new ArrayList<>();
         //ParsedNested用于接收内置属性的聚合
         ParsedNested parsedNested = aggregations.get("attrs");
         ParsedLongTerms attrIdAgg = parsedNested.getAggregations().get("attrIdAgg");
         for (Terms.Bucket bucket : attrIdAgg.getBuckets()) {
-            //5.1 查询属性id
+            // 5.1 查询属性id
             Long attrId = bucket.getKeyAsNumber().longValue();
             Aggregations subAttrAgg = bucket.getAggregations();
-            //5.2 查询属性名
+            // 5.2 查询属性名
             ParsedStringTerms attrNameAgg = subAttrAgg.get("attrNameAgg");
             String attrName = attrNameAgg.getBuckets().get(0).getKeyAsString();
-            //5.3 查询属性值
+            // 5.3 查询属性值
             ParsedStringTerms attrValueAgg = subAttrAgg.get("attrValueAgg");
             List<String> attrValues = new ArrayList<>();
             for (Terms.Bucket attrValueAggBucket : attrValueAgg.getBuckets()) {
@@ -181,25 +184,36 @@ public class SearchServiceImpl implements SearchService {
         List<String> attrs = searchParam.getAttrs();
         if (attrs != null && attrs.size() > 0) {
             List<SearchResult.NavVo> navVos = attrs.stream().map(attr -> {
+                // 6.1 遍历所有的筛选属性 作用为 attr=8_高通 -> CPU品牌:高通
                 String[] split = attr.split("_");
                 SearchResult.NavVo navVo = new SearchResult.NavVo();
-                //6.1 设置属性值
+                // 6.2 设置属性值
                 navVo.setNavValue(split[1]);
-                //6.2 查询并设置属性名
+                // 6.3 根据属性id查询并设置属性名
                 try {
                     R r = productFeignService.info(Long.parseLong(split[0]));
                     if (r.getCode() == 0) {
                         AttrResponseVo attrResponseVo = JSON.parseObject(JSON.toJSONString(r.get("attr")),
                                 new TypeReference<AttrResponseVo>() {
-                        });
+                                });
                         navVo.setNavName(attrResponseVo.getAttrName());
                     }
                 } catch (Exception e) {
                     log.error("远程调用商品服务查询属性失败", e);
                 }
-                //6.3 设置面包屑跳转链接
+                // 6.4 设置面包屑跳转链接
                 String queryString = searchParam.get_queryString();
-                String replace = queryString.replace("&attrs=" + attr, "").replace("attrs=" + attr + "&", "").replace("attrs=" + attr, "");
+                String encode = null;
+                try {
+                    encode = URLEncoder.encode(attr, "UTF-8");
+                    encode = encode.replace("+", "%20");
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException(e);
+                }
+                // 6.5 得到取消掉该面包屑后的URL地址
+                String replace = queryString.replace("&attrs=" + encode, "")
+                        .replace("attrs=" + encode + "&", "")
+                        .replace("attrs=" + encode, "");
                 navVo.setLink("http://search.gulimall.com/list.html" + (replace.isEmpty() ? "" : "?" + replace));
                 return navVo;
             }).collect(Collectors.toList());

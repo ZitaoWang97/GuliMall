@@ -22,7 +22,6 @@ import com.zitao.common.utils.PageUtils;
 import com.zitao.common.utils.R;
 
 
-
 /**
  * 会员
  *
@@ -38,6 +37,8 @@ public class MemberController {
 
     /**
      * 注册会员
+     * 如果出现用户名存在或者电话号码已存在抛出的异常 则返回错误状态码
+     *
      * @return
      */
     @RequestMapping("/register")
@@ -52,12 +53,18 @@ public class MemberController {
         return R.ok();
     }
 
+    /**
+     * 用户登陆
+     *
+     * @param loginVo
+     * @return
+     */
     @RequestMapping("/login")
     public R login(@RequestBody MemberLoginVo loginVo) {
-        MemberEntity entity=memberService.login(loginVo);
-        if (entity!=null){
-            return R.ok().put("memberEntity",entity);
-        }else {
+        MemberEntity entity = memberService.login(loginVo);
+        if (entity != null) {
+            return R.ok().put("memberEntity", entity);
+        } else {
             return R.error(BizCodeEnume.LOGINACCT_PASSWORD_EXCEPTION.getCode(), BizCodeEnume.LOGINACCT_PASSWORD_EXCEPTION.getMsg());
         }
     }
@@ -65,19 +72,20 @@ public class MemberController {
     // 测试远程调用coupon微服务
     @Autowired
     CouponFeignService couponFeignService;
+
     @RequestMapping("/coupons")
-    public R test(){
+    public R test() {
         MemberEntity memberEntity = new MemberEntity();
         memberEntity.setNickname("lil wong");
         R membercoupons = couponFeignService.membercoupons();
-        return R.ok().put("member",memberEntity).put("coupons",membercoupons.get("coupons"));
+        return R.ok().put("member", memberEntity).put("coupons", membercoupons.get("coupons"));
     }
 
     /**
      * 列表
      */
     @RequestMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = memberService.queryPage(params);
 
         return R.ok().put("page", page);
@@ -88,8 +96,8 @@ public class MemberController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-    public R info(@PathVariable("id") Long id){
-		MemberEntity member = memberService.getById(id);
+    public R info(@PathVariable("id") Long id) {
+        MemberEntity member = memberService.getById(id);
 
         return R.ok().put("member", member);
     }
@@ -98,8 +106,8 @@ public class MemberController {
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody MemberEntity member){
-		memberService.save(member);
+    public R save(@RequestBody MemberEntity member) {
+        memberService.save(member);
 
         return R.ok();
     }
@@ -108,8 +116,8 @@ public class MemberController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody MemberEntity member){
-		memberService.updateById(member);
+    public R update(@RequestBody MemberEntity member) {
+        memberService.updateById(member);
 
         return R.ok();
     }
@@ -118,8 +126,8 @@ public class MemberController {
      * 删除
      */
     @RequestMapping("/delete")
-    public R delete(@RequestBody Long[] ids){
-		memberService.removeByIds(Arrays.asList(ids));
+    public R delete(@RequestBody Long[] ids) {
+        memberService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }

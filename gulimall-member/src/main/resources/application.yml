@@ -13,6 +13,20 @@ spring:
         server-addr: 127.0.0.1:8848
   application:
     name: gulimall-member
+  thymeleaf:
+    cache: false
+  redis:
+    host: 192.168.56.10
+  session:
+    store-type: redis
+  zipkin:
+    base-url: http://192.168.56.10:9411/
+    sender:
+      type: web
+    discovery-client-enabled: false
+  sleuth:
+    sampler:
+      probability: 1
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml  #只扫描自己类下的mapper

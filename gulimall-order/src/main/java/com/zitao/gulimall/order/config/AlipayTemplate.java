@@ -14,35 +14,34 @@ import org.springframework.stereotype.Component;
 @Data
 public class AlipayTemplate {
 
-    //在支付宝创建的应用的id
-    private   String app_id = "2016102600763190";
+    // 在支付宝创建的应用的id
+    private String app_id = "2021000121638994";
 
     // 商户私钥，您的PKCS8格式RSA2私钥
-    private String merchant_private_key = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDTiPl6wpuJ1cMcfN6UEdk8nMrFOjY40IUndIq2ST2gETUDgwBD0c9xEewKad8wERvBKmeuLGRmIm5+YshddhuqMl8jE3qpLsgnTZPTh0npEkfzGwb83WzP8VcBVLP/IPC4KN3sOgISelKXn7X0qPj8wtnCpZbDT56HXx7cAngAb+GxO2CsHs/atoZAJRwkZbhOe/843HkE5fK762aaEW7Hjgln8mX398fqiS19Ynd0oXGmUMAYVUcLkNp3YAsAtBi6v+gbPl6pPeXqvdsfCln4nSbCLpZE6NbQumPJswW71Sew0vGL3aH/aItKhWhC+S372YV+U0RKo/i7Tqn1fQAlAgMBAAECggEAZqhZ0o6xJyI7Tw72gctrrrO04CRQ/h+MD0rKqo4+vvi6zpp7vW4MCyaUc7VPoCcdXhAzQt6+VqatEt7juB/Ca0WI0B/67jIK5rAKZqSIZPj/O+bI7FyVGxFXlQjDVbRpviXvFV5NdSQyAu16Q2LheuEhBwqPcPepyq6J7mGwVR0U2dpf9AKAnxyInRz++uPVz13+Oi4CftSU7lR6az05RfhDSMPii0JelHR5Btc03M0+VODmuLDnPPmnLCM4myWqmxc8jcGa/WtuAynmQMiV3C8vd90NvHHGk9CbrmDjB6MKUc1m4brdMr3Gds/LFFwUYLbRwuTASL2ftlJcOtgKgQKBgQDxNaIezzlrW3cHfeNwVypPf3Oj3hdS3tj5nW5p5xDqbbrCjc4TYcQSgndTFLBPCiaA7IhFuOnHc/TJhcJaS6g2o1Z6oy3PSo0J7bjGuOXJIcgxyZfFS9RKvFUZUJRkHHtCjW3qvr1eWFdHwh+R8jyxqktnNgzg0nB6wkrCXOpzIQKBgQDggYdsEal2WlulF1qtwi6lYl0wZTlS1Id/Zu82kvxcDDhYvKQIzMiFTou4TXjgC//o2D80Z9edIho5zW6thl4njHROA2y1JNS24KGtulZR35KgpAmnwgEqNu7BshxC+j+dgtOPA6b/dMkFnWM8+tHHCBDUvY/DIvZjWt3w3/kwhQKBgQDjUqyLZLi0mOrAwL/MbBmP+om9cd2BWEwcU2ZvoDis9uT/3izMz2K+Hv7d6a2Pj/1hm4mCTBbmxj14fvr/pjXN6Hnj8k2GAriRFt0BS9gjihbl9Rt38VMNbBi3Vt3Cy6TOwANLLJ/DfnYjRqwCG81fkyKlDqdsamdfCiTysCa0gQKBgQDYQ45LSRxAOTyM5NliBmtev0lbpDa7FqXL0UFgBel5VgA1Ysp0+6ex2n73NBHbaVPEXgNMnTdzU3WF9uHF4Gj0mfUzbVMbj/YkkHDOZHBggAjEHCB87IKowq/uAH/++Qes2GipHHCTJlG6yejdxhOsMZXdCRnidNx5yv9+2JI37QKBgQCw0xn7ZeRBIOXxW7xFJw1WecUV7yaL9OWqKRHat3lFtf1Qo/87cLl+KeObvQjjXuUe07UkrS05h6ijWyCFlBo2V7Cdb3qjq4atUwScKfTJONnrF+fwTX0L5QgyQeDX5a4yYp4pLmt6HKh34sI5S/RSWxDm7kpj+/MjCZgp6Xc51g==";
+    private String merchant_private_key = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCA47GdsvPK+0a3lIJqHc09z+jSP1TpTdy0ztWeq0NQgFQWMfdU1nk6BDtvs6gosPa9VCDNYBDJvp/4KTbc92thvSJxXYiY/D+5JGT1kkmeAsLsmWrN/O0KeCt69Ts42C4/5QUboFEb+zau9jPH/5F1N06XVyIwXf3gL0pPLTL7BksdobdsxW9fCcKBBsWGsOVV+hvY1vKSAsOok3cU8YcCUpbLc+IG/90pGIELhtfWGqD5/ljNfwXE/9WUtl1/s5GkchAejjXBzyPZTYB8Hyn5kz2LMvPWiKHaKfJ1h9OQP/+n8ieTcZGKb+AqIvzqO4CaNjqR4vMZEHUKTdUiSIiFAgMBAAECggEAZ9qQOJiENm9IKQ5CE01WHlNTr22WdrLlfs8Wc9Zd1BTDLGswdqymW6gjWDsz6S3GcwHBuJqKjHTMI0LaUSwP215xzVTnhxXiJsV7kCBCr05cUBbCZ55ARepUZqwI/yG6CoP4HK2ODXTbOBlr2eBFDWT2L53nD3/829JfFvM9m+PujWeTmPK6H/QfsAscUu4W/XZsH6OPAVO5YAg0jT0TPJu38A0N3J8kjUCuFpwLdzoL0eShQ+LcQZv6j14F9hQkLruj1GtEt0sI1gkFYogm+LzHtXECWXpv/Kh6PlsW9hNMHMDAKBXZxTvQ8XOS/3DfjaINW54sLWKue66tUTbUVQKBgQC3hZMLStRT3xmTRfbCDQsbZsCerITG4v8w+Uv11uiIIzrRdBivoq2dY9YLQarvvVGtNxAbEGYpPhb2HXF+KC0cU2SNOy2DbYOVB3jAUprUTIP4mVfdZgESDkwk1tSZdhaaCpsB1L7ovNe0maTPc6Y3ZBHE053AyTDBp2W2XIl/fwKBgQCzyq2IBLom5Mve/QkPW2ee1t30OeRB2ndrIKIzRvT8emiCT61jOI4Q122eaXp5bdBKpk1MANwRnQn2pYd3NHSXu2fVY3PPnMRJtV680b++FuEqB0jeOLycALSlP3Zu+NJkTPRENaT+eAqs45ZVC7fK/tcUJyaaUJ3BlD4QEIr5+wKBgBH5mExr2N4aJPQizyd0hZj6eHVSKnMceqg+Uq1SjlX/NVychWp2gZC/3ZAer3Jp1Z0knoQ4F/mEJlWWzq3vm3OBy4B1wmB0EoY/RBl6PcX7dJWd11hNDF/LXLPjAtHBGjeeQE5umwBKtsnunpDfH/Ge8IqZu4LNceQV1EWHTMRbAoGAHaOn/+hnl8nYIiasu69h4bmiVYTFsGWHkk2K79EeyhCT8geYmebU5Mne9GKHIkWMNQI9c+4gWXb+EX8wWeJ35huq/m6qxOsfINeZip85cOjsrbUNujS4Qy+KmENiDuFOLeLR0fzV+m1ntSC/w71uyzQ/2L6rin0HxMXfhV50yskCgYEApck5lO5Bad3y55oRQ942kbFt1zjhCL14arcTzoozQBelKLcHtk9jMdHHCVDdV3dwO24vGwKBaSzVJrEgGpLfa953h95W+Emsvs7yGN3yuG6FyDQ0VgYYjeuytTooqYg1ER0d7zl3yEgn+xEdTzAL/jzBSFOPU+i1roGfQ7T4u6M=";
 
     // 支付宝公钥,查看地址：https://openhome.alipay.com/platform/keyManage.htm 对应APPID下的支付宝公钥。
-    private String alipay_public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA350s1XUIRmg1GMuzyeNK7slljoo1YWZAq31lDLOLparzUC3s17v8giSAa8smwLXMlC4qb8QGW0jhsqGs9I01mMYCSp9waXrxy/MQa3Uok8ETMF3h6swkadGSt74UKxt2F8VMIRKrRAAAuIMuawIsl4Ye+G12LK8P1ZLYy7ZJpgZ+Wv5nOs3DdoEazgCERj/ON8lM1KBHZOAV+TkrIcyi7cD1gfv4a1usikrUqm8/qhFvoiUfyHJFv1ymT7C4BI6aHzQ2zcUlSQPGoPl4C11tgnSkm3DlH2JZKgaIMcCOnNH+qctjNh9yIV9zat2qUiXbxmrCTtxAmiI3I+eVsUNwvwIDAQAB";
+    private String alipay_public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuUmP2yNmZ23Kmgne1vQksADFGa82XXuX5JKNbfqd/l3OjsRjM6vbUQSHlGMKOgKRQmEbVQD2SwaZKEIRaVYe1gxBnu7WlRtNNPEd/SaKsY5/HHiVEs+8eJeP9B2oCNNKWChZWa8p4LgksK0gzIKXe6bm6lB+0bahVTUYVZYgifTPg0YAQWswMIw8HW27hEeQlL9UvM4QmRe3jT7irstlkkUf6vbK3jcxnHbD9P6v7SMWMXe2Dv3RU7n4r1+/lO130rsmp6phVdNmrzrH43QhmLbRd6Rd+AyqJB+ZkM81/1fwcKpUu59eRLMUH5dfRL+QmLyT4P03Oqa2bi91WcYtMQIDAQAB";
 
     // 服务器[异步通知]页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
     // 支付宝会悄悄的给我们发送一个请求，告诉我们支付成功的信息
-    private  String notify_url="http://nxz9r8.natappfree.cc/payed/notify";
+    private String notify_url = "http://order.gulimall.com/payed/notify";
 
     // 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-    //同步通知，支付成功，一般跳转到成功页
-    private  String return_url="http://order.gulimall.com/memberOrder.html";
+    // 同步通知，支付成功，一般跳转到成功页
+    private String return_url = "http://member.gulimall.com/memberOrder.html";
 
     // 签名方式
-    private  String sign_type = "RSA2";
+    private String sign_type = "RSA2";
 
     // 字符编码格式
-    private  String charset = "utf-8";
+    private String charset = "utf-8";
 
     // 支付宝网关； https://openapi.alipaydev.com/gateway.do
-    private  String gatewayUrl = "https://openapi.alipaydev.com/gateway.do";
+    private String gatewayUrl = "https://openapi.alipaydev.com/gateway.do";
 
-    public  String pay(PayVo vo) throws AlipayApiException {
+    public String pay(PayVo vo) throws AlipayApiException {
 
-        //AlipayClient alipayClient = new DefaultAlipayClient(AlipayTemplate.gatewayUrl, AlipayTemplate.app_id, AlipayTemplate.merchant_private_key, "json", AlipayTemplate.charset, AlipayTemplate.alipay_public_key, AlipayTemplate.sign_type);
         //1、根据支付宝的配置生成一个支付客户端
         AlipayClient alipayClient = new DefaultAlipayClient(gatewayUrl,
                 app_id, merchant_private_key, "json",
@@ -62,17 +61,17 @@ public class AlipayTemplate {
         //商品描述，可空
         String body = vo.getBody();
 
-        alipayRequest.setBizContent("{\"out_trade_no\":\""+ out_trade_no +"\","
-                + "\"total_amount\":\""+ total_amount +"\","
-                + "\"subject\":\""+ subject +"\","
-                + "\"body\":\""+ body +"\","
-                +"\"timeout_express\":\"1m\","
+        alipayRequest.setBizContent("{\"out_trade_no\":\"" + out_trade_no + "\","
+                + "\"total_amount\":\"" + total_amount + "\","
+                + "\"subject\":\"" + subject + "\","
+                + "\"body\":\"" + body + "\","
+                + "\"timeout_express\":\"1m\","
                 + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
 
         String result = alipayClient.pageExecute(alipayRequest).getBody();
 
         //会收到支付宝的响应，响应的是一个页面，只要浏览器显示这个页面，就会自动来到支付宝的收银台页面
-        System.out.println("支付宝的响应："+result);
+        System.out.println("支付宝的响应：" + result);
 
         return result;
 

@@ -24,7 +24,7 @@
 					</ul>
 					<ul class="header-right">
 						<li>
-							<a href="http://auth.gulimall.com/login.html">你好，[[${session.loginUser==null?"请登录":session.loginUser.nickname}]]</a>
+							<a href="http://auth.gulimall.com/login.html">[[${session.loginUser==null?"请登录":session.loginUser.username}]]</a>
 						</li>
 						<li>
 							<a href="http://auth.gulimall.com/reg.html" class="li_2">免费注册</a>
@@ -48,7 +48,7 @@
 			<div class="one_sousuo">
 				<div class="one_search_top">
 					<div class="one_top_left">
-						<a href="/static/cart/" class="one_left_logo"><img src="/static/cart/img/logo1.jpg"></a>
+						<a href="http://gulimall.com" class="one_left_logo"><img src="/static/cart/img/logo1.jpg"></a>
 						<a href="#" class="one_left_link">购物车</a>
 					</div>
 					<div class="one_top_right">
@@ -56,10 +56,10 @@
 						<input type="button" value="搜索" class="one_right_btn">
 					</div>
 				</div>
-				<div class="one_search_load" th:if="${userId}==null">
+				<div class="one_search_load" th:if="${session.loginUser==null}">
 					<img src="/static/cart/img/shop_07.jpg" class="one_load_wraing">
 					<span>您还没有登录！登录后购物车的商品将保存到您账号中</span>
-					<a href="#"><input type="button" onclick="login()" value="立即登录" class="one_load_btn"></a>
+					<a href="http://auth.gulimall.com/login.html"><input type="button" onclick="login()" value="立即登录" class="one_load_btn"></a>
 				</div>
 			</div>
 		</div>
@@ -90,12 +90,14 @@
 
 							<div>
 								<ol>
-									<li><input type="checkbox" class="check" th:value="${item.skuId}" onchange="checkSku(this)" th:checked="${item.check}" /></li>
+									<li><input type="checkbox" class="itemCheck" th:attr="skuId=${item.skuId}" th:checked="${item.check}" /></li>
 									<li>
 										<dt><img th:src="${item.image}" src="/static/cart/img/shop1.jpg" alt=""></dt>
-										<dd th:onclick="'toItem('+${item.skuId}+')'">
+										<dd th:onclick="'toItem('+${item.skuId}+')'" style="width: 300px">
 											<p>
 												<span th:text="${item.title}">TCL 55A950C 55英寸32核</span>
+												<br/>
+												<span th:each="attr:${item.skuAttrValues}" th:text="${attr}+' '"></span>
 											</p>
 										</dd>
 									</li>
@@ -118,44 +120,7 @@
 								</ol>
 							</div>
 						</li>
-						<!--<li>
-                    <div>
-                    </div>
-                    <div>
-                        <ol>
-                            <li><input type="checkbox"  class="check"></li>
-                            <li>
-                                <dt><img src="/static/cart/img\shop1.jpg" alt=""></dt>
-                                <dd>
-                                    <p>
 
-                                        <span>TCL 55A950C 55英寸32核</span>
-                                        <span>尺码: 55时 超薄曲面 人工智能</span>
-                                    </p>
-                                    <p>人工智能 HDR曲面超薄4K电视金属机</p>
-
-                                </dd>
-                            </li>
-                            <li>
-                                <p class="dj">￥4599.00</p>
-
-                            </li>
-                            <li>
-                                <p>
-                                    <span>-</span>
-                                    <span>5</span>
-                                    <span>+</span>
-                                </p>
-
-                            </li>
-                            <li style="font-weight:bold"><p class="zj">￥22995.00</p></li>
-                            <li>
-                                <p>删除</p>
-
-                            </li>
-                        </ol>
-                    </div>
-                </li>-->
 
 					</ul>
 				</div>
@@ -178,8 +143,8 @@
 					</div>
 					<div>
 						<ol>
-							<li>总价:<span style="color:#e64346;font-weight:bold;font-size:16px;" class="fnt">￥0.00</span> </li>
-
+							<li>总价:<span style="color:#e64346;font-weight:bold;font-size:16px;" class="fnt" th:text="'￥'+${cart.getTotalAmount()}">￥0.00</span> </li>
+							<li>优惠:<span style="color:rgba(230,67,67,0.94);font-weight:bold;font-size:16px;" class="fnt" th:text="'￥'+${cart.getReduce()}">￥0.00</span> </li>
 						</ol>
 					</div>
 					<div><button onclick="toTrade()" type="button">去结算</button></div>
@@ -803,6 +768,12 @@
 			$(this).children("p").children("img").attr("src", "img/one_mian_gwc2.png")
 		}).mouseout(function() {
 			$(this).children("p").children("img").attr("src", "img/one_mian_gwc1.png")
+		})
+
+		$(".itemCheck").click(function () {
+			var skuId = $(this).attr("skuId");
+			var check = $(this).prop("checked");
+			location.href = "http://cart.gulimall.com/checkCart?skuId=" + skuId + "&check=" + (check?1:0);
 		})
 
 

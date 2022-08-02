@@ -15,12 +15,21 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 @EnableCaching
 @EnableConfigurationProperties(CacheProperties.class)
 public class MyCacheConfig {
+
+    /**
+     * CacheAutoConfiguration -> RedisCacheConfiguration 自动配置了 RedisCacheManager -> RedisCache
+     * RedisCacheConfiguration如果存在容器中就使用 否则就用默认配置
+     *
+     * @param cacheProperties
+     * @return
+     */
     @Bean
     public org.springframework.data.redis.cache.RedisCacheConfiguration redisCacheConfiguration(
             CacheProperties cacheProperties) {
         CacheProperties.Redis redisProperties = cacheProperties.getRedis();
         org.springframework.data.redis.cache.RedisCacheConfiguration config = org.springframework.data.redis.cache.RedisCacheConfiguration
                 .defaultCacheConfig();
+        // 设置为json的序列化器
         config = config.serializeValuesWith(
                 RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
         if (redisProperties.getTimeToLive() != null) {

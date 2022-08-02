@@ -790,8 +790,8 @@
                         <div class="sl_value_logo">
                             <ul>
                                 <li th:each="brand: ${result.getBrands()}">
-                                    <a href="#"  th:href="${'javascript:searchProducts(&quot;brandId&quot;,'+brand.brandId+')'}">
-                                        <img src="/static/search/img/598033b4nd6055897.jpg" alt="" th:src="${brand.brandImg}">
+                                    <a th:href="${'javascript:searchProducts(&quot;brandId&quot;,'+brand.brandId+')'}">
+                                        <img alt="" th:src="${brand.brandImg}">
                                         <div th:text="${brand.brandName}">
                                             华为(HUAWEI)
                                         </div>
@@ -824,29 +824,7 @@
                         </ul>
                     </div>
                 </div>
-                <!--价格-->
-                <div class="JD_pre">
-                    <div class="sl_key">
-                        <span>价格：</span>
-                    </div>
-                    <div class="sl_value">
-                        <ul>
-                            <li><a href="#">0-499</a></li>
-                            <li><a href="#">500-999</a></li>
-                            <li><a href="#">1000-1699</a></li>
-                            <li><a href="#">1700-2799</a></li>
-                            <li><a href="#">2800-4499</a></li>
-                            <li><a href="#">4500-11999</a></li>
-                            <li><a href="#">12000以上</a></li>
-                            <li class="sl_value_li">
-                                <input type="text">
-                                <p>-</p>
-                                <input type="text">
-                                <a href="#">确定</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+
                 <!--商品属性-->
                 <div class="JD_pre" th:each="attr: ${result.getAttrs()}" >
                     <div class="sl_key">
@@ -1188,7 +1166,7 @@
                         </div>
 
                     </div>
-                    <!--排序内容-->
+                    <!--排序内容 每四个是一组-->
                     <div class="rig_tab">
                         <div th:each="product : ${result.getProduct()}">
                             <div class="ico">
@@ -1867,8 +1845,13 @@
     <!--仅显示有货-->
     $("#showHasStock").click(function () {
         let checked = $(this).prop("checked");
-        console.log(checked);
-        location.href=replaceParamVal(location.href,"hasStock",checked?1:0,false)
+        if (checked) {
+            location.href=replaceParamVal(location.href,"hasStock",1);
+        } else {
+            var re = eval('/(hasStock=)([^&]*)/gi');
+            location.href = (location.href+"").replace(re,'');
+        }
+
     })
 
     <!--价格区间-->

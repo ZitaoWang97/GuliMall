@@ -59,6 +59,7 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
 
     /**
      * 合并采购单
+     *
      * @param mergeVo
      * purchaseId: 1, //整单id
      * items:[1,2,3,4] //合并项集合

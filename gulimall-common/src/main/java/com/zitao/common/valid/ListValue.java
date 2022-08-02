@@ -15,7 +15,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 public @interface ListValue {
+    // 以下这三个属性是必备的
 
+    /**
+     * 校验出错信息放在 ValidationMessages.properties
+     * @return
+     */
     String message() default "{com.zitao.common.valid.ListValue.message}";
 
     Class<?>[] groups() default {};

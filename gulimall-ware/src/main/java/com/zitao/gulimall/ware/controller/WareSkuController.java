@@ -86,13 +86,19 @@ public class WareSkuController {
         return R.ok();
     }
 
+    /**
+     * 锁库存
+     * @param lockVo
+     * @return
+     */
     @RequestMapping("/lock/order")
     public R orderLockStock(@RequestBody WareSkuLockVo lockVo) {
         try {
             Boolean lock = wareSkuService.orderLockStock(lockVo);
             return R.ok();
         } catch (NoStockException e) {
-            return R.error(BizCodeEnume.NO_STOCK_EXCEPTION.getCode(), BizCodeEnume.NO_STOCK_EXCEPTION.getMsg());
+            return R.error(BizCodeEnume.NO_STOCK_EXCEPTION.getCode(),
+                    BizCodeEnume.NO_STOCK_EXCEPTION.getMsg());
         }
     }
 

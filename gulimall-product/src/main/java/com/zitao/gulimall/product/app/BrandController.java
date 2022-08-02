@@ -1,6 +1,7 @@
 package com.zitao.gulimall.product.app;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.zitao.common.valid.AddGroup;
@@ -56,16 +57,21 @@ public class BrandController {
 
     /**
      * 保存
-     * BindingResult result： 校验结果，可以拿到错误属性和对应的信息
+     * BindingResult result: 校验结果，包含错误属性和对应的信息，形参列表中一定要紧跟着待校验的参数!
      * 不标注的话，所有的异常都被SpringMVC统一集中处理
-     * @Validated：分组校验
+     * @Valid
+     * @Validated: 分组校验
      */
     @RequestMapping("/save")
     public R save(@Validated(AddGroup.class) @RequestBody BrandEntity brand /**BindingResult result*/) {
+
 //        if (result.hasErrors()) {
+//            // 获取校验的错误结果
 //            Map<String, String> map = new HashMap<>();
 //            result.getFieldErrors().forEach((item) -> {
+//                // 获取错误提示
 //                String defaultMessage = item.getDefaultMessage();
+//                // 获取错误的属性名
 //                String field = item.getField();
 //                map.put(field, defaultMessage);
 //            });

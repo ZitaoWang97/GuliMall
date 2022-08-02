@@ -27,6 +27,7 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
 
     /**
      * 模糊查询
+     *
      * @param params
      * @return
      */
@@ -47,8 +48,9 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
     }
 
     /**
-     * 当品牌名字被更新的时候，不仅brand数据库本身要被更新。
+     * 当品牌名字被更新的时候，不仅brand数据库本身要被更新
      * 与brand品牌相关联的表中的brand_name也要被更新
+     *
      * @param brand
      */
     @Override
@@ -56,7 +58,7 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
     public void updateDetail(BrandEntity brand) {
         this.updateById(brand);
         if (!StringUtils.isEmpty(brand.getName())) {
-            categoryBrandRelationService.updateBrand(brand.getBrandId(),brand.getName());
+            categoryBrandRelationService.updateBrand(brand.getBrandId(), brand.getName());
             // TODO 更新其他与brand_name相关联的表
         }
     }

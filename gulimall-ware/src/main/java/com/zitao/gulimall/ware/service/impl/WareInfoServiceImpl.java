@@ -47,16 +47,24 @@ public class WareInfoServiceImpl extends ServiceImpl<WareInfoDao, WareInfoEntity
         return new PageUtils(page);
     }
 
+    /**
+     * 根据地址id获取邮费
+     *
+     * @param addrId
+     * @return
+     */
     @Override
     public FareVo getFare(Long addrId) {
         FareVo fareVo = new FareVo();
+        // 1. 先调用gulimall_member查询收货人地址的详细信息
         R info = memberFeignService.info(addrId);
         if (info.getCode() == 0) {
-            MemberAddressVo address = info.getData("memberReceiveAddress", new TypeReference<MemberAddressVo>() {
-            });
+            MemberAddressVo address = info.getData("memberReceiveAddress",
+                    new TypeReference<MemberAddressVo>() {
+                    });
             fareVo.setAddress(address);
             String phone = address.getPhone();
-            //取电话号的最后两位作为邮费 好贵哦！
+            // 2. 取收件人电话号的最后两位作为邮费
             String fare = phone.substring(phone.length() - 2, phone.length());
             fareVo.setFare(new BigDecimal(fare));
         }

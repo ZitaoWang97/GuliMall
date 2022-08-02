@@ -15,19 +15,31 @@ import java.util.HashMap;
 @EnableRabbit
 @Configuration
 public class MyRabbitmqConfig {
+    /**
+     * 使用JSON进行序列化
+     *
+     * @return
+     */
     @Bean
     public MessageConverter messageConverter() {
-        //在容器中导入Json的消息转换器
         return new Jackson2JsonMessageConverter();
     }
 
+    /**
+     * 交换机
+     *
+     * @return
+     */
     @Bean
     public Exchange stockEventExchange() {
-        return new TopicExchange("stock-event-exchange", true, false);
+        return new TopicExchange("stock-event-exchange",
+                true,
+                false);
     }
 
     /**
      * 延迟队列
+     *
      * @return
      */
     @Bean
@@ -35,23 +47,32 @@ public class MyRabbitmqConfig {
         HashMap<String, Object> arguments = new HashMap<>();
         arguments.put("x-dead-letter-exchange", "stock-event-exchange");
         arguments.put("x-dead-letter-routing-key", "stock.release");
-        // 消息过期时间 2分钟
         arguments.put("x-message-ttl", 120000);
-        return new Queue("stock.delay.queue", true, false, false, arguments);
+        return new Queue("stock.delay.queue",
+                true,
+                false,
+                false,
+                arguments);
     }
 
     /**
      * 普通队列，用于解锁库存
+     *
      * @return
      */
     @Bean
     public Queue stockReleaseStockQueue() {
-        return new Queue("stock.release.stock.queue", true, false, false, null);
+        return new Queue("stock.release.stock.queue",
+                true,
+                false,
+                false,
+                null);
     }
 
 
     /**
      * 交换机和延迟队列绑定
+     *
      * @return
      */
     @Bean
@@ -65,6 +86,7 @@ public class MyRabbitmqConfig {
 
     /**
      * 交换机和普通队列绑定
+     *
      * @return
      */
     @Bean

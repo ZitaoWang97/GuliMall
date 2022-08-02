@@ -12,6 +12,10 @@ public class ListValueConstraintValidator implements ConstraintValidator<ListVal
 
     private Set<Integer> set = new HashSet<>();
 
+    /**
+     * 初始化方法
+     * @param constraintAnnotation
+     */
     @Override
     public void initialize(ListValue constraintAnnotation) {
         // 读取注解内标注的数据并放入set中

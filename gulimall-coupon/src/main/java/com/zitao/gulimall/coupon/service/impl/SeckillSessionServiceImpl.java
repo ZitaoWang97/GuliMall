@@ -40,13 +40,21 @@ public class SeckillSessionServiceImpl extends ServiceImpl<SeckillSessionDao, Se
         return new PageUtils(page);
     }
 
+    /**
+     * 获取近三天的秒杀活动信息
+     *
+     * @return
+     */
     @Override
     public List<SeckillSessionEntity> getSeckillSessionsIn3Days() {
         QueryWrapper<SeckillSessionEntity> queryWrapper = new QueryWrapper<SeckillSessionEntity>()
                 .between("start_time", getStartTime(), getEndTime());
+        // 1. 获取到秒杀活动id
         List<SeckillSessionEntity> seckillSessionEntities = this.list(queryWrapper);
         List<SeckillSessionEntity> list = seckillSessionEntities.stream().map(session -> {
-            List<SeckillSkuRelationEntity> skuRelationEntities = seckillSkuRelationService.list(new QueryWrapper<SeckillSkuRelationEntity>().eq("promotion_session_id", session.getId()));
+            // 2. 查询到对应秒杀活动里的所有商品信息 并且封装到SeckillSessionEntity中
+            List<SeckillSkuRelationEntity> skuRelationEntities = seckillSkuRelationService.list(
+                    new QueryWrapper<SeckillSkuRelationEntity>().eq("promotion_session_id", session.getId()));
             session.setRelations(skuRelationEntities);
             return session;
         }).collect(Collectors.toList());
@@ -54,6 +62,11 @@ public class SeckillSessionServiceImpl extends ServiceImpl<SeckillSessionDao, Se
         return list;
     }
 
+    /**
+     * 获取到当前时间 00:00:00
+     *
+     * @return
+     */
     private String getStartTime() {
         LocalDate now = LocalDate.now();
         LocalDateTime time = now.atTime(LocalTime.MIN);
@@ -61,7 +74,11 @@ public class SeckillSessionServiceImpl extends ServiceImpl<SeckillSessionDao, Se
         return format;
     }
 
-    //当前天数+2 23:59:59..
+    /**
+     * 获取结束时间  当前天数+2 23:59:59
+     *
+     * @return
+     */
     private String getEndTime() {
         LocalDate now = LocalDate.now();
         LocalDateTime time = now.plusDays(2).atTime(LocalTime.MAX);

@@ -15,6 +15,14 @@ spring:
   redis:
     port: 6379
     host: 192.168.56.10
+  zipkin:
+    base-url: http://192.168.56.10:9411/
+    sender:
+      type: web
+    discovery-client-enabled: false
+  sleuth:
+    sampler:
+      probability: 1
 
 
 server:

@@ -7,6 +7,9 @@ public class CartItemVo {
 
     private Long skuId;
 
+    /**
+     * 商品是否被选中
+     */
     private Boolean check = true;
 
     private String title;
@@ -22,6 +25,9 @@ public class CartItemVo {
 
     private Integer count;
 
+    /**
+     * 商品总价 需要动态计算
+     */
     private BigDecimal totalPrice;
 
     public Long getSkuId() {
@@ -82,6 +88,7 @@ public class CartItemVo {
 
     /**
      * 当前购物车项总价等于单价x数量
+     *
      * @return
      */
     public BigDecimal getTotalPrice() {

@@ -34,7 +34,7 @@ public class AttrController {
 
     @GetMapping("/base/listforspu/{spuId}")
     public R listAttrsforSpu(@PathVariable("spuId") Long spuId) {
-        List<ProductAttrValueEntity> productAttrValueEntities=productAttrValueService.listAttrsforSpu(spuId);
+        List<ProductAttrValueEntity> productAttrValueEntities = productAttrValueService.listAttrsforSpu(spuId);
         return R.ok().put("data", productAttrValueEntities);
     }
 
@@ -48,16 +48,17 @@ public class AttrController {
 
     /**
      * 模糊查询三级分类对应的所有属性（规格参数 和 销售属性）
+     *
      * @param params
      * @param catelogId 三级分类id
-     * @param type 规格参数："base" 销售属性："sale"
+     * @param type      规格参数："base" 销售属性："sale"
      * @return
      */
     @GetMapping("/{attrType}/list/{catelogId}")
     public R baseAttrList(@RequestParam Map<String, Object> params,
                           @PathVariable("catelogId") Long catelogId,
                           @PathVariable("attrType") String type) {
-        PageUtils page = attrService.queryBaseAttrPage(params, catelogId, type);
+        PageUtils page = attrService.queryAttrPage(params, catelogId, type);
 
         return R.ok().put("page", page);
     }

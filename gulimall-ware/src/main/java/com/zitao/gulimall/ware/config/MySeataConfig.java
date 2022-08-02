@@ -15,7 +15,6 @@ public class MySeataConfig {
     @Autowired
     DataSourceProperties dataSourceProperties;
 
-
     @Bean
     public DataSource dataSource(DataSourceProperties dataSourceProperties) {
 

@@ -26,7 +26,7 @@ public class CartVo {
     private BigDecimal totalAmount;
 
     /**
-     * 减免价格
+     * 减免价格 默认没有
      */
     private BigDecimal reduce = new BigDecimal("0.00");
 
@@ -39,7 +39,7 @@ public class CartVo {
     }
 
     public Integer getCountNum() {
-        int count=0;
+        int count = 0;
         if (items != null && items.size() > 0) {
             for (CartItemVo item : items) {
                 count += item.getCount();
@@ -53,7 +53,7 @@ public class CartVo {
     }
 
     public Integer getCountType() {
-        int count=0;
+        int count = 0;
         if (items != null && items.size() > 0) {
             for (CartItemVo item : items) {
                 count += 1;
@@ -70,10 +70,12 @@ public class CartVo {
         BigDecimal total = new BigDecimal(0);
         if (items != null && items.size() > 0) {
             for (CartItemVo item : items) {
-                total.add(item.getTotalPrice());
+                if (item.getCheck()) {
+                    total = total.add(item.getTotalPrice());
+                }
             }
         }
-        total.subtract(reduce);
+        total = total.subtract(reduce);
         return total;
     }
 

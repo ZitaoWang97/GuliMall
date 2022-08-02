@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,16 +56,24 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         return new PageUtils(page);
     }
 
+    /**
+     * 平台属性-规格参数-新增功能
+     * 既要保存属性，还要保存属性-属性分组的关联关系（基本规格参数）
+     *
+     * @param attr
+     */
     @Transactional
     @Override
     public void saveAttr(AttrVo attr) {
+        // 1. 保存属性
         // 把页面来的封装的值对应到PO里
         AttrEntity attrEntity = new AttrEntity();
         BeanUtils.copyProperties(attr, attrEntity);
         this.save(attrEntity);
-        // 保存attr_attrgroup_relation 只有规格参数才有分组信息，销售属性不分组
+        // 2. 保存属性-属性分组关联关系
+        // 保存attr_attrgroup_relation 只有规格参数才有分组信息，销售属性没有属性分组信息
         if (attr.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()
-                                            && attr.getAttrGroupId() != null) {
+                && attr.getAttrGroupId() != null) {
             AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
             relationEntity.setAttrGroupId(attr.getAttrGroupId());
             relationEntity.setAttrId(attrEntity.getAttrId());
@@ -73,8 +82,17 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
     }
 
+    /**
+     * 根据三级分类id查询所有的属性
+     * type指定是基本属性还是销售属性
+     *
+     * @param params
+     * @param catelogId
+     * @param type
+     * @return
+     */
     @Override
-    public PageUtils queryBaseAttrPage(Map<String, Object> params, Long catelogId, String type) {
+    public PageUtils queryAttrPage(Map<String, Object> params, Long catelogId, String type) {
         // 1.根据三级分类id检索规格参数/销售属性
         QueryWrapper<AttrEntity> wrapper = new QueryWrapper<>();
         wrapper.eq("attr_type", "base".equalsIgnoreCase(type) ?
@@ -124,6 +142,12 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         return pageUtils;
     }
 
+    /**
+     * 修改属性时候的信息回显
+     *
+     * @param attrId
+     * @return
+     */
     @Override
     public AttrRespVo getAttrInfo(Long attrId) {
         AttrRespVo respVo = new AttrRespVo();
@@ -153,6 +177,12 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         return respVo;
     }
 
+    /**
+     * 修改属性
+     *
+     * @param attr
+     */
+    @Transactional
     @Override
     public void updateAttr(AttrVo attr) {
         // 修改基本数据
@@ -174,7 +204,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
                         new UpdateWrapper<AttrAttrgroupRelationEntity>()
                                 .eq("attr_id", attr.getAttrId()));
             } else {
-                // 原本没关联的，时insert操作
+                // 原本没关联的，insert操作
                 relationDao.insert(relationEntity);
             }
         }
@@ -254,7 +284,8 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
 
     /**
-     * 在指定的attr_id集合里面挑选出可以被检索的attr_id
+     * 在指定的attr_id集合里面挑选出可以被检索的attr_id 即search_type = 1
+     *
      * @param attrIds
      * @return
      */

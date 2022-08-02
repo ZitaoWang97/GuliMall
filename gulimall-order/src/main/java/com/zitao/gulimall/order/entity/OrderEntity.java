@@ -193,6 +193,10 @@ public class OrderEntity implements Serializable {
 	 */
 	private Date modifyTime;
 
+
+	/**
+	 * 订单项
+	 */
 	@TableField(exist = false)
 	private List<OrderItemEntity> items;
 

@@ -41,6 +41,12 @@ public class AttrGroupController {
     @Autowired
     AttrAttrgroupRelationService relationService;
 
+    /**
+     * 查出当前三级分类下的所有属性分组
+     * 并且带有该属性分组所包含的所有属性
+     * @param catId
+     * @return
+     */
     @GetMapping("/{catelogId}/withattr")
     public R getAttrGroupWithAttrByCatelogId(@PathVariable("catelogId") Long catId) {
         List<AttrGroupWithAttrsVo> groupWithAttrVos = attrGroupService.getAttrGroupWithAttrByCatelogId(catId);
@@ -61,6 +67,7 @@ public class AttrGroupController {
 
     /**
      * 根据属性分组id找到分组内所有的属性
+     *
      * @param attrgroupId
      * @return
      */
@@ -73,8 +80,8 @@ public class AttrGroupController {
     // http://localhost:88/api/product/attrgroup/2/noattr/relation?t=1656747489655&page=1&limit=10&key=
     @GetMapping("/{attrgroupId}/noattr/relation")
     public R attrNoRelation(@PathVariable("attrgroupId") Long attrgroupId,
-                            @RequestParam Map<String, Object> params){
-        PageUtils page = attrService.getNoRelationAttr(attrgroupId,params);
+                            @RequestParam Map<String, Object> params) {
+        PageUtils page = attrService.getNoRelationAttr(attrgroupId, params);
         return R.ok().put("page", page);
     }
 

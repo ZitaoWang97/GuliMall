@@ -24,11 +24,10 @@ public class SmsSendController {
      * @return
      */
     @ResponseBody
-    @PostMapping(value = "/sendCode")
+    @GetMapping(value = "/sendCode")
     public R sendCode(@RequestParam("phone") String phone, @RequestParam("code") String code) {
         //发送验证码
         smsComponent.sendCode(phone, code);
-        System.out.println(phone + ": " + code);
         return R.ok();
     }
 

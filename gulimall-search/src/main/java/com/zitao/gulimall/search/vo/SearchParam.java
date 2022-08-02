@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * 封装页面所有可能传递过来的查询条件
+ */
 @Data
 public class SearchParam {
 
@@ -23,7 +26,7 @@ public class SearchParam {
     private Long catalog3Id;
 
     /**
-     * 排序条件：sort=price/salecount/hotscore(综合排序)_desc/asc
+     * 排序条件：sort=skuPrice/saleCount/hotScore_desc/asc
      */
     private String sort;
 

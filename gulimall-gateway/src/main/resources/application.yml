@@ -46,15 +46,11 @@ spring:
           uri: lb://gulimall-third-party
           predicates:
             - Path=/api/thirdparty/**
-            # 重写路径
-            # 当前请求路径: http://localhost:88/api/thirdparty/oss/policy
-            # 经过负载均衡: http://localhost:30000/api/thirdparty/oss/policy
-            # 希望转换为路径: http://localhost:30000/oss/policy
           filters:
             - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
 
         - id: admin_route
-          # lb代表负载均衡
+          # lb: load balance 负载均衡
           uri: lb://renren-fast
           # 默认前端项目路径上都先以api开头
           predicates:
@@ -91,6 +87,11 @@ spring:
           predicates:
             - Host=order.gulimall.com
 
+        - id: gulimall_member_route
+          uri: lb://gulimall-member
+          predicates:
+            - Host=member.gulimall.com
+
         - id: gulimall_seckill_route
           uri: lb://gulimall-seckill
           predicates:
@@ -104,6 +105,15 @@ spring:
         server-addr: 127.0.0.1:8848
   application:
     name: gulimall-gateway
+  zipkin:
+    base-url: http://192.168.56.10:9411/
+    sender:
+      type: web
+    discovery-client-enabled: false
+
+  sleuth:
+    sampler:
+      probability: 1
 
 server:
   port: 88

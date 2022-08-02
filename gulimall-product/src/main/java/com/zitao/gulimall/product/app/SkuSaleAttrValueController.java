@@ -31,6 +31,11 @@ public class SkuSaleAttrValueController {
     @Autowired
     private SkuSaleAttrValueService skuSaleAttrValueService;
 
+    /**
+     * 根据sku_id获取对应商品的属性拼接成的字符串 购物车远程调用回显属性信息
+     * @param skuId
+     * @return
+     */
     @RequestMapping("/getSkuSaleAttrValuesAsString")
     public List<String> getSkuSaleAttrValuesAsString(@RequestBody Long skuId) {
         return skuSaleAttrValueService.getSkuSaleAttrValuesAsString(skuId);

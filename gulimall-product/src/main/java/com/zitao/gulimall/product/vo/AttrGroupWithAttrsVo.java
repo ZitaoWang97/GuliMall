@@ -8,6 +8,9 @@ import java.util.List;
 
 @Data
 public class AttrGroupWithAttrsVo {
+    /**
+     * 对应属性分组下的所有属性
+     */
     private List<AttrEntity> attrs;
     /**
      * 分组id

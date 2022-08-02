@@ -67,7 +67,7 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
         QueryWrapper<SkuInfoEntity> queryWrapper = new QueryWrapper<>();
         String key = (String) params.get("key");
         if (!StringUtils.isEmpty(key)) {
-            queryWrapper.and(wrpper->{
+            queryWrapper.and(wrpper -> {
                 wrpper.eq("sku_id", key).or().like("sku_name", key);
             });
         }
@@ -86,14 +86,14 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
         String min = (String) params.get("min");
         if (!StringUtils.isEmpty(min)) {
             BigDecimal minDecimal = new BigDecimal(min);
-            if (minDecimal.compareTo(new BigDecimal(0))==1)
+            if (minDecimal.compareTo(new BigDecimal(0)) == 1)
                 queryWrapper.ge("price", min);
         }
 
         String max = (String) params.get("max");
         if (!StringUtils.isEmpty(max)) {
             BigDecimal maxDecimal = new BigDecimal(max);
-            if (maxDecimal.compareTo(new BigDecimal(0))==1)
+            if (maxDecimal.compareTo(new BigDecimal(0)) == 1)
                 queryWrapper.le("price", max);
         }
         IPage<SkuInfoEntity> page = this.page(
@@ -122,28 +122,30 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 
         //2、sku的图片信息    pms_sku_images
         CompletableFuture<Void> imageFuture = CompletableFuture.runAsync(() -> {
-            List<SkuImagesEntity> skuImagesEntities = skuImagesService.list(new QueryWrapper<SkuImagesEntity>().eq("sku_id", skuId));
+            List<SkuImagesEntity> skuImagesEntities = skuImagesService.list(new QueryWrapper<SkuImagesEntity>()
+                    .eq("sku_id", skuId));
             skuItemVo.setImages(skuImagesEntities);
         }, executor);
 
 
-        //3、获取spu的销售属性组合-> 依赖1 获取spuId
+        //3、获取spu的销售属性组合-> 依赖1的结果 获取spuId
         CompletableFuture<Void> saleFuture = infoFuture.thenAcceptAsync((info) -> {
             List<SkuItemSaleAttrVo> saleAttrVos = skuSaleAttrValueService.listSaleAttrs(info.getSpuId());
             skuItemVo.setSaleAttr(saleAttrVos);
         }, executor);
 
 
-        //4、获取spu的介绍-> 依赖1 获取spuId
+        //4、获取spu的介绍-> 依赖1的结果 获取spuId
         CompletableFuture<Void> descFuture = infoFuture.thenAcceptAsync((info) -> {
             SpuInfoDescEntity byId = spuInfoDescService.getById(info.getSpuId());
             skuItemVo.setDesc(byId);
         }, executor);
 
 
-        //5、获取spu的规格参数信息-> 依赖1 获取spuId catalogId
+        //5、获取spu的规格参数信息-> 依赖1的结果 获取spuId  catalogId
         CompletableFuture<Void> attrFuture = infoFuture.thenAcceptAsync((info) -> {
-            List<SpuItemAttrGroupVo> spuItemAttrGroupVos=productAttrValueService.getProductGroupAttrsBySpuId(info.getSpuId(), info.getCatalogId());
+            List<SpuItemAttrGroupVo> spuItemAttrGroupVos = productAttrValueService
+                    .getProductGroupAttrsBySpuId(info.getSpuId(), info.getCatalogId());
             skuItemVo.setGroupAttrs(spuItemAttrGroupVos);
         }, executor);
 
@@ -154,16 +156,16 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
                 SeckillSkuVo seckillSkuVo = r.getData(new TypeReference<SeckillSkuVo>() {
                 });
                 long current = System.currentTimeMillis();
-                //如果返回结果不为空且活动未过期，设置秒杀信息
-                if (seckillSkuVo != null&&current<seckillSkuVo.getEndTime()) {
+                // 如果返回结果不为空且活动未过期，设置秒杀信息
+                if (seckillSkuVo != null && current < seckillSkuVo.getEndTime()) {
                     skuItemVo.setSeckillSkuVo(seckillSkuVo);
                 }
             }
         }, executor);
 
-        //等待所有任务执行完成
+        // 等待所有任务执行完成
         try {
-            CompletableFuture.allOf(imageFuture, saleFuture, descFuture, attrFuture,seckFuture).get();
+            CompletableFuture.allOf(imageFuture, saleFuture, descFuture, attrFuture, seckFuture).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

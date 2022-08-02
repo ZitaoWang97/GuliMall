@@ -34,5 +34,7 @@ public interface OrderService extends IService<OrderEntity> {
     PayVo getOrderPay(String orderSn);
 
     OrderEntity getOrderByOrderSn(String orderSn);
+
+    PageUtils queryPageWithItem(Map<String, Object> params);
 }
 

@@ -3,7 +3,7 @@
 
 <mapper namespace="com.zitao.gulimall.product.dao.ProductAttrValueDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.zitao.gulimall.product.entity.ProductAttrValueEntity" id="productAttrValueMap">
         <result property="id" column="id"/>
         <result property="spuId" column="spu_id"/>
@@ -24,11 +24,12 @@
     </resultMap>
 
     <select id="getProductGroupAttrsBySpuId" resultMap="ProductGroupAttrsMap">
-        SELECT ag.attr_group_name,attr.attr_id,attr.attr_name,attr.attr_value
+        SELECT ag.attr_group_name, attr.attr_id, attr.attr_name, attr.attr_value
         FROM pms_attr_attrgroup_relation aar
-                 LEFT JOIN pms_attr_group ag ON aar.attr_group_id=ag.attr_group_id
-                 LEFT JOIN pms_product_attr_value attr ON aar.attr_id=attr.attr_id
-        WHERE attr.spu_id = #{spuId} AND ag.catelog_id = #{catalogId}
+                 LEFT JOIN pms_attr_group ag ON aar.attr_group_id = ag.attr_group_id
+                 LEFT JOIN pms_product_attr_value attr ON aar.attr_id = attr.attr_id
+        WHERE attr.spu_id = #{spuId}
+          AND ag.catelog_id = #{catalogId}
     </select>
 
 

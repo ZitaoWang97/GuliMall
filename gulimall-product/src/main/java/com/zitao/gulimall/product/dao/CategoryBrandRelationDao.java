@@ -15,6 +15,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface CategoryBrandRelationDao extends BaseMapper<CategoryBrandRelationEntity> {
 
+    // 如果参数多于1个，为每一个参数设置别名，方便在sql语句中取用
     void updateCategory(@Param("catId") Long catId, @Param("name") String name);
-    // 为每一个参数设置一个别名，方便
+
 }

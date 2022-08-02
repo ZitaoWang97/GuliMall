@@ -39,6 +39,7 @@ public class GulimallSearchApplicationTests {
 
     /**
      * 测试存储数据到es
+     *
      * @throws IOException
      */
     @Test
@@ -58,6 +59,7 @@ public class GulimallSearchApplicationTests {
 
     /**
      * 测试检索数据
+     *
      * @throws IOException
      */
     @Test

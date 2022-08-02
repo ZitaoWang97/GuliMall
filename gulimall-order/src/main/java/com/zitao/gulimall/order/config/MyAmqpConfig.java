@@ -34,19 +34,20 @@ public class MyAmqpConfig {
         return new Jackson2JsonMessageConverter();
     }
 
-//    @PostConstruct // MyAmqpConfig对象完成创建后再调用该方法
+    // MyAmqpConfig对象完成创建后再调用该方法
+//    @PostConstruct
     public void initRabbitTemplate() {
         // 设置确认回调
         rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
             /**
              * publisher --> exchange
-             * @param correlationData 当前消息的唯一关联数据（这个是消息的唯一id）
+             * @param correlationData 当前消息的唯一关联数据（唯一id） 在发布消息的时候可以指定
              * @param b 消息是否成功收到
              * @param s 失败的原因
              */
             @Override
             public void confirm(CorrelationData correlationData, boolean b, String s) {
-                System.out.println("correlationData:"+correlationData);
+                System.out.println("消息成功到达交换机, correlationData: " + correlationData);
             }
         });
 
@@ -62,6 +63,7 @@ public class MyAmqpConfig {
              */
             @Override
             public void returnedMessage(Message message, int i, String s, String exchange, String routingKey) {
+                System.out.println("消息进入队列失败, message: "+ message);
             }
         });
     }

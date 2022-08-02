@@ -17,13 +17,13 @@ public class GuliFeignConfig {
         return new RequestInterceptor() {
             @Override
             public void apply(RequestTemplate template) {
-                //1. 使用RequestContextHolder拿到老请求的请求数据(调用order服务里请求的request）
+                // 1. 使用RequestContextHolder拿到老请求的请求数据(调用order服务里请求的request）
                 ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
                 // 同步请求头数据，特别是cookie
                 if (requestAttributes != null) {
                     HttpServletRequest request = requestAttributes.getRequest();
                     if (request != null) {
-                        //2. 将老请求得到cookie信息放到feign请求上
+                        // 2. 将老请求得到cookie信息放到feign请求上
                         String cookie = request.getHeader("Cookie");
                         template.header("Cookie", cookie);
                     }

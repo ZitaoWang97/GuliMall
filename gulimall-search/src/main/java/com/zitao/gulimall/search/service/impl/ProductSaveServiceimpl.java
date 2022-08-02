@@ -27,16 +27,25 @@ public class ProductSaveServiceimpl implements ProductSaveService {
     @Autowired
     private RestHighLevelClient restHighLevelClient;
 
+    /**
+     * 商品上架 保存数据到ES中
+     *
+     * @param skuEsModels
+     * @return
+     * @throws IOException
+     */
     @Override
     public boolean saveProductAsIndices(List<SkuEsModel> skuEsModels) throws IOException {
         BulkRequest bulkRequest = new BulkRequest();
         for (SkuEsModel skuEsModel : skuEsModels) {
+            // 构造保存请求
             IndexRequest indexRequest = new IndexRequest(EsConstant.PRODUCT_INDEX);
             indexRequest.id(skuEsModel.getSkuId().toString());
             String s = JSON.toJSONString(skuEsModel);
             indexRequest.source(s, XContentType.JSON);
             bulkRequest.add(indexRequest);
         }
+        // 给ES中批量保存数据
         BulkResponse bulkResponse = restHighLevelClient.bulk(bulkRequest,
                 GulimallElasticSearchConfig.COMMON_OPTIONS);
         boolean hasFailures = bulkResponse.hasFailures();

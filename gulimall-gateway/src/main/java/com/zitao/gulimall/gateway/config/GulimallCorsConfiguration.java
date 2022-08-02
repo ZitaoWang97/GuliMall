@@ -21,7 +21,7 @@ public class GulimallCorsConfiguration {
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedOrigin("*");
         corsConfiguration.setAllowCredentials(true);
-
+        // 任意路径都要进行跨域配置
         source.registerCorsConfiguration("/**",corsConfiguration);
         return new CorsWebFilter(source);
     }

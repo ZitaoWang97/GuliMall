@@ -28,6 +28,12 @@ public class OrderWebController {
         return page;
     }
 
+    /**
+     * 购物车到确认页
+     *
+     * @param model
+     * @return
+     */
     @RequestMapping("/toTrade")
     public String toTrade(Model model) {
         OrderConfirmVo confirmVo = orderService.confirmOrder();
@@ -35,15 +41,23 @@ public class OrderWebController {
         return "confirm";
     }
 
+    /**
+     * 下单功能
+     *
+     * @param submitVo
+     * @param model
+     * @param attributes
+     * @return
+     */
     @RequestMapping("/submitOrder")
     public String submitOrder(OrderSubmitVo submitVo, Model model, RedirectAttributes attributes) {
-        try{
-            SubmitOrderResponseVo responseVo=orderService.submitOrder(submitVo);
+        try {
+            SubmitOrderResponseVo responseVo = orderService.submitOrder(submitVo);
             Integer code = responseVo.getCode();
-            if (code==0){
+            if (code == 0) {
                 model.addAttribute("order", responseVo.getOrder());
                 return "pay";
-            }else {
+            } else {
                 String msg = "下单失败;";
                 switch (code) {
                     case 1:
@@ -56,8 +70,8 @@ public class OrderWebController {
                 attributes.addFlashAttribute("msg", msg);
                 return "redirect:http://order.gulimall.com/toTrade";
             }
-        }catch (Exception e){
-            if (e instanceof NoStockException){
+        } catch (Exception e) {
+            if (e instanceof NoStockException) {
                 String msg = "下单失败，商品无库存";
                 attributes.addFlashAttribute("msg", msg);
             }
@@ -67,11 +81,12 @@ public class OrderWebController {
 
     /**
      * 获取当前用户的所有订单
+     *
      * @return
      */
     @RequestMapping("/memberOrder.html")
-    public String memberOrder(@RequestParam(value = "pageNum",required = false,defaultValue = "0") Integer pageNum,
-                         Model model){
+    public String memberOrder(@RequestParam(value = "pageNum", required = false, defaultValue = "0") Integer pageNum,
+                              Model model) {
         Map<String, Object> params = new HashMap<>();
         params.put("page", pageNum.toString());
         PageUtils page = orderService.getMemberOrderPage(params);

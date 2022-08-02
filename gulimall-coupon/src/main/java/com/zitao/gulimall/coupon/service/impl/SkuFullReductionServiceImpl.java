@@ -48,14 +48,14 @@ public class SkuFullReductionServiceImpl extends ServiceImpl<SkuFullReductionDao
 
     @Override
     public void saveSkuReductionTo(SkuReductionTo skuReductionTo) {
-        // sms_sku_full_reduction
+        // sms_sku_full_reduction 满减
         SkuFullReductionEntity skuFullReductionEntity = new SkuFullReductionEntity();
         BeanUtils.copyProperties(skuReductionTo, skuFullReductionEntity);
         if (skuReductionTo.getFullPrice().compareTo(new BigDecimal("0")) == 1) {
             this.baseMapper.insert(skuFullReductionEntity);
         }
 
-        // sms_sku_ladder
+        // sms_sku_ladder 满件折扣
         SkuLadderEntity skuLadderEntity = new SkuLadderEntity();
         BeanUtils.copyProperties(skuReductionTo, skuLadderEntity);
         skuLadderEntity.setAddOther(skuReductionTo.getCountStatus());
@@ -63,7 +63,7 @@ public class SkuFullReductionServiceImpl extends ServiceImpl<SkuFullReductionDao
             skuLadderService.save(skuLadderEntity);
         }
 
-        // sms_member_price
+        // sms_member_price 会员价格
         List<MemberPrice> memberPrice = skuReductionTo.getMemberPrice();
         List<MemberPriceEntity> collect = memberPrice.stream().map(item -> {
             MemberPriceEntity priceEntity = new MemberPriceEntity();
@@ -73,7 +73,7 @@ public class SkuFullReductionServiceImpl extends ServiceImpl<SkuFullReductionDao
             priceEntity.setMemberPrice(item.getPrice());
             priceEntity.setAddOther(1);
             return priceEntity;
-        }).filter(item->{
+        }).filter(item -> {
             return item.getMemberPrice().compareTo(new BigDecimal("0")) == 1;
         }).collect(Collectors.toList());
         memberPriceService.saveBatch(collect);

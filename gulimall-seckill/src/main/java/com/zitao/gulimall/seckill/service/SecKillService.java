@@ -1,4 +1,4 @@
-package com.zitao.gulimall.seckill.Service;
+package com.zitao.gulimall.seckill.service;
 
 
 import com.zitao.gulimall.seckill.to.SeckillSkuRedisTo;

@@ -18,7 +18,7 @@ public class SearchController {
     private SearchService searchService;
 
     /**
-     * 自动将页面传递的查询参数封装为vo对象
+     * 自动将页面传递的查询参数封装为vo对象 SearchParam
      *
      * @param searchParam
      * @param model

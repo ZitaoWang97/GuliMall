@@ -39,12 +39,14 @@ public class BrandEntity implements Serializable {
      * 品牌名
      */
     @NotBlank(message = "品牌名不能为空串", groups = {AddGroup.class, UpdateGroup.class})
+    // @NotBlank 至少包含一个非空格的字符
     private String name;
     /**
      * 品牌logo地址
      */
     @NotBlank(groups = {AddGroup.class})
     @URL(message = "logo必须是一个合法的URL地址", groups = {AddGroup.class, UpdateGroup.class})
+    // 新增时不能为空，但修改的时候一旦带上了就需要是一个合法的URL地址
     private String logo;
     /**
      * 介绍
@@ -65,7 +67,8 @@ public class BrandEntity implements Serializable {
     /**
      * 排序
      */
-    @NotNull(groups = {AddGroup.class}) // Integer不能用@NotEmpty来约束
+    @NotNull(groups = {AddGroup.class})
+    // Integer不能用@NotEmpty来约束
     @Min(value = 0, message = "排序必须大于等于0", groups = {AddGroup.class, UpdateGroup.class})
     private Integer sort;
 

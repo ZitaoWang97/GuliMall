@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan("com.zitao.gulimall.product.dao")
 public class MyBatisConfig {
 
-    // 引入分页插件
+    // 注入分页插件
     @Bean
     public PaginationInterceptor paginationInterceptor() {
         PaginationInterceptor paginationInterceptor = new PaginationInterceptor();

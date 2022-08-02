@@ -31,9 +31,13 @@ public class GulimallProductApplicationTests {
     @Autowired
     CategoryService categoryService;
 
+    /*
+    测试查找所属分类的完整路径
+    [2, 34, 225]
+     */
     @Test
     public void testFindPath() {
-        Long[] categoryPath = categoryService.findCategoryPath(255L);
+        Long[] categoryPath = categoryService.findCategoryPath(225L);
         log.info("完整路径:{}", Arrays.asList(categoryPath));
     }
 
@@ -131,7 +135,7 @@ public class GulimallProductApplicationTests {
         brandEntity.setName("xiaomi");
         brandService.save(brandEntity);
         System.out.println("保存成功...");
-//        // 测试修改功能
+        // 测试修改功能
         brandEntity.setBrandId(2l);
         brandEntity.setName("huawei");
         brandService.updateById(brandEntity);

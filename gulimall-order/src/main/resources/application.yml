@@ -25,26 +25,24 @@ spring:
     password: guest
     listener:
       simple:
-        acknowledge-mode: manual
+        acknowledge-mode: manual # 手动确认模式
     port: 5672
     virtual-host: /
     publisher-confirms: true
     publisher-returns: true
+    # 只要消息抵达队列，以异步发送优先回调return-confirm
     template:
       mandatory: true
   mvc:
     date-format: yyyy-MM-dd HH:mm:ss
-#  zipkin:
-#    base-url: http://localhost:9411
-#    sender:
-#      type: web
-#    discovery-client-enabled: false
-
-  #采样取值介于 0到1之间，1则表示全部收集
-
-#  sleuth:
-#    sampler:
-#      probability: 1
+  zipkin:
+    base-url: http://192.168.56.10:9411/
+    sender:
+      type: web
+    discovery-client-enabled: false
+  sleuth:
+    sampler:
+      probability: 1
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml  #只扫描自己类下的mapper

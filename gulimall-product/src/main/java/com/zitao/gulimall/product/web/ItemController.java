@@ -15,9 +15,16 @@ public class ItemController {
     @Autowired
     private SkuInfoService skuInfoService;
 
+    /**
+     * 展示当前sku的详情
+     *
+     * @param skuId
+     * @param model
+     * @return
+     */
     @GetMapping("/{skuId}.html")
     public String skuItem(@PathVariable("skuId") Long skuId, Model model) {
-        SkuItemVo skuItemVo=skuInfoService.item(skuId);
+        SkuItemVo skuItemVo = skuInfoService.item(skuId);
         model.addAttribute("item", skuItemVo);
         return "item";
     }

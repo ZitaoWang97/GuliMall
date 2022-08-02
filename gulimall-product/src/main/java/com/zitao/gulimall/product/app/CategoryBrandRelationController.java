@@ -45,6 +45,7 @@ public class CategoryBrandRelationController {
 
     /**
      * 获取当前品牌关联的所有分类列表：一对多关系
+     * GetMapping = RequestMapping(method = {RequestMethod.GET})
      */
     @GetMapping(value = "/catelog/list")
     public R catelogList(@RequestParam("brandId") Long brandId) {
